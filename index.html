@@ -6,22 +6,81 @@
   <!-- 网页基础信息设置 -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>REI-Bench: Can Embodied Agents Understand Vague Human Instructions in Task Planning?</title>
+  <title>REI-Bench: Vague Instructions in Task Planning</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
   <!-- 页面样式定义 -->
   <style>
     /* 整体页面字体、行距、背景颜色和内边距设置 */
     body {
-      font-family: Calibri, Arial, sans-serif;
+      font-family: 'Roboto', sans-serif;
+      background: white;
       margin: 0;
-      padding: 0;
-      background-color: white;
+      padding: 40px;
+      text-align: center;
+      color: #333;
     }
 
     /* 标题样式：颜色和居中 */
-    h1, h2 {
-      color: #333;
-      text-align: center;
+    h1 {
+      font-size: 2.5em;
+      background: linear-gradient(to right, #f97316, #22c55e, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.3em;
+    }
+
+    h1 span {
+      color: #f97316;
+    }
+
+    /* 作者信息样式 */
+    .authors {
+      font-size: 1.1em;
+      margin: 10px 0;
+    }
+
+    .authors a {
+      color: #3b82f6;
+      text-decoration: none;
+      margin: 0 5px;
+    }
+
+    .affiliation {
+      color: #ef4444;
+    }
+
+    .email {
+      margin-top: 5px;
+      font-family: monospace;
+      font-size: 0.95em;
+    }
+
+    /* 个人页面等跳转按钮设计 */
+    .buttons {
+      margin-top: 25px;
+    }
+
+    .buttons a {
+      display: inline-block;
+      background: #1f2937;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 30px;
+      margin: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .buttons a:hover {
+      background: #4b5563;
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 1.1em;
+      color: #555;
     }
 
     /* 页面主容器样式：宽度、居中、白色背景、内边距、圆角 */
@@ -31,11 +90,6 @@
       background: white;
       padding: 20px;
       border-radius: 8px;
-    }
-
-    /* 作者信息区域样式 */
-    .info {
-      margin-bottom: 20px;
     }
 
     /* 表格样式：宽度、边框、间距 */
@@ -72,13 +126,25 @@
   <div class="container">
 
     <!-- 页面主标题 -->
-    <h1>REI-Bench: Can Embodied Agents Understand Vague Human Instructions in Task Planning?</h1>
+    <h1><span>REI-Bench</span>: Can Embodied Agents Understand Vague Human Instructions in Task Planning?</h1>
 
     <!-- 作者信息区 -->
-    <div class="info">
-      <p><strong>姓名：</strong>张三</p>
-      <p><strong>个人网站：</strong><a href="https://yourdomain.com" target="_blank">https://yourdomain.com</a></p>
-      <p><strong>邮箱：</strong>zhangsan@example.com</p>
+    <div class="authors">
+        <a href="#">Your Name</a>
+    </div>
+    <div class="affiliation">Institute of Future Robotics, University Name</div>
+    <div class="email">{your.email@domain.edu}</div>
+
+    <!-- 个人链接跳转按钮 -->
+    <div class="buttons">
+        <a href="#">Code</a>
+        <a href="#">Paper</a>
+        <a href="#">arXiv</a>
+        <a href="#">BibTeX</a>
+    </div>
+
+    <div class="footer">
+        Accepted by CoRL 2025
     </div>
 
     <!-- 视频区域 -->
