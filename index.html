@@ -245,62 +245,72 @@
     </p>
 
     <!-- 实验结果展示 -->
-    <h2>Evaluations</h2>
-    <h3>Cases</h3>
-    <h3>Benchmark Result</h3>
+    <h2 style="text-align: center;">Evaluations</h2>
+    <h3 style="text-align: left;">Cases</h3>
+    <h3 style="text-align: left;">Benchmark Result</h3>
+
     <!-- 主展示区 -->
     <div class="image-display">
-        <img id="img1" src="media/figure1_teaser_motivation.png" alt="Image 1">
-        <img id="img2" src="media/figure1_teaser_motivation.png" alt="Image 2">
+        <img id="imgLeft" src="media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" alt="llama_saycan" width="400">
+        <img id="imgRight" src="media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" alt="gpt_saycan" width="400">
     </div>
 
     <!-- 选择控件 -->
     <div class="selector">
         <div>
-        <label for="select1">Select Left Image:</label><br>
-        <select id="select1">
-            <!-- JS 生成选项 -->
-        </select>
+            <label for="selectLeft">Select Left Image:</label><br>
+            <select id="selectLeft"></select>
         </div>
         <div>
-        <label for="select2">Select Right Image:</label><br>
-        <select id="select2">
-            <!-- JS 生成选项 -->
-        </select>
+            <label for="selectRight">Select Right Image:</label><br>
+            <select id="selectRight"></select>
         </div>
     </div>
 
     <script>
-        const select1 = document.getElementById('select1');
-        const select2 = document.getElementById('select2');
-        const img1 = document.getElementById('img1');
-        const img2 = document.getElementById('img2');
+        const imageList = [
+            { name: "LLaMA3.1-8B + SayCan", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" },
+            { name: "GPT-4o-mini + SayCan", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" },
+            { name: "DeepSeekMath-7B + SayCan", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__SayCan.jpg" },
+            { name: "Gemma2-9B + SayCan", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__SayCan.jpg" },
+            { name: "Ministral-8B + SayCan", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__SayCan.jpg" },
+            { name: "Qwen2.5-7B + SayCan", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__SayCan.jpg" },
+            { name: "LLaMA3.1-8B + LLM+P", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__LLM+P.jpg" },
+            { name: "GPT-4o-mini + LLM+P", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__LLM+P.jpg" },
+            { name: "DeepSeekMath-7B + LLM+P", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__LLM+P.jpg" },
+            { name: "Gemma2-9B + LLM+P", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__LLM+P.jpg" },
+            { name: "Ministral-8B + LLM+P", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__LLM+P.jpg" },
+            { name: "Qwen2.5-7B + LLM+P", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__LLM+P.jpg" },
+        ];
 
-        // 动态生成选项
-        for (let i = 1; i <= 12; i++) {
-        const option1 = document.createElement('option');
-        option1.value = i;
-        option1.text = 'Image ' + i;
-        if (i === 1) option1.selected = true;
-        select1.appendChild(option1);
+        const selectLeft = document.getElementById("selectLeft");
+        const selectRight = document.getElementById("selectRight");
+        const imgLeft = document.getElementById("imgLeft");
+        const imgRight = document.getElementById("imgRight");
 
-        const option2 = document.createElement('option');
-        option2.value = i;
-        option2.text = 'Image ' + i;
-        if (i === 2) option2.selected = true;
-        select2.appendChild(option2);
-        }
+        imageList.forEach((item, index) => {
+            const optL = document.createElement("option");
+            optL.value = item.path;
+            optL.text = item.name;
+            if (index === 0) optL.selected = true;
+            selectLeft.appendChild(optL);
 
-        // 更新图像函数
+            const optR = document.createElement("option");
+            optR.value = item.path;
+            optR.text = item.name;
+            if (index === 1) optR.selected = true;
+            selectRight.appendChild(optR);
+        });
+
         function updateImages() {
-        img1.src = `img/result${select1.value}.png`;
-        img2.src = `img/result${select2.value}.png`;
+            imgLeft.src = selectLeft.value;
+            imgRight.src = selectRight.value;
         }
 
-        // 监听选择变化
-        select1.addEventListener('change', updateImages);
-        select2.addEventListener('change', updateImages);
+        selectLeft.addEventListener("change", updateImages);
+        selectRight.addEventListener("change", updateImages);
     </script>
+
 
     <h3>Prompting Method</h3>
     <table>
