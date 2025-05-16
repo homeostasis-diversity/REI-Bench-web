@@ -30,9 +30,28 @@
       margin-bottom: 0.3em;
     }
 
+    /* 标题样式 */
     h1 span {
       color: #f97316;
     }
+
+    h2 {
+      margin-top: 60px;
+      font-size: 1.6em;
+      color: #222;
+    }
+
+    /* 正文样式-默认 */
+    .text-default {
+      font-size: 1.05em;
+      text-align: justify;
+    }
+
+    .text-abstract {
+      text-align: justify;
+      font-size: 1.05em;
+    }
+
 
     /* 作者信息样式 */
     .authors {
@@ -167,17 +186,20 @@
     </section>
 
     <!-- 视频区域 -->
-    <h2>研究介绍视频</h2>
+    <h2>Motivation</h2>
+    <p class="text-abstract">
+        Motivation
+    </p>
     <iframe src="https://www.youtube.com/embed/视频ID"></iframe>
 
     <!-- 研究内容介绍 -->
-    <h2>研究背景与贡献</h2>
+    <h2>Method</h2>
     <p>
-      我的研究聚焦于XXXX，解决了XXX问题。该方法在XXX数据集上取得了XXX的提升。
+      Method.
     </p>
 
     <!-- 实验结果展示 -->
-    <h2>实验结果</h2>
+    <h2>Evaluations</h2>
     <table>
       <tr>
         <th>方法</th>
@@ -198,6 +220,13 @@
         <td>87.8%</td>
       </tr>
     </table>
+
+    <!-- 相关研究 -->
+    <h2>Related Works</h2>
+
+
+    <!-- BibTeX -->
+    <h2>BibTeX</h2>
 
   </div> <!-- 结束 .container -->
 </body>
