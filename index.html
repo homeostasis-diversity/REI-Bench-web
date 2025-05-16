@@ -163,6 +163,37 @@
       margin-top: 20px;
       border: none;
     }
+
+    .image-display {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 30px;
+    }
+
+    /* 可互动图片展示区域样式 */
+    .image-display img {
+      width: 300px;
+      height: auto;
+      border: 2px solid #aaa;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .selector {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+    }
+
+    select {
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    label {
+      font-weight: bold;
+    }
   </style>
 </head>
 
@@ -219,6 +250,60 @@
     <h2>Evaluations</h2>
     <h3>Cases</h3>
     <h3>Benchmark Result</h3>
+    <!-- 主展示区 -->
+    <div class="image-display">
+        <img id="img1" src="media/figure1_teaser_motivation.png" alt="Image 1">
+        <img id="img2" src="media/figure1_teaser_motivation.png" alt="Image 2">
+    </div>
+
+    <!-- 选择控件 -->
+    <div class="selector">
+        <div>
+        <label for="select1">Select Left Image:</label><br>
+        <select id="select1">
+            <!-- JS 生成选项 -->
+        </select>
+        </div>
+        <div>
+        <label for="select2">Select Right Image:</label><br>
+        <select id="select2">
+            <!-- JS 生成选项 -->
+        </select>
+        </div>
+    </div>
+
+    <script>
+        const select1 = document.getElementById('select1');
+        const select2 = document.getElementById('select2');
+        const img1 = document.getElementById('img1');
+        const img2 = document.getElementById('img2');
+
+        // 动态生成选项
+        for (let i = 1; i <= 12; i++) {
+        const option1 = document.createElement('option');
+        option1.value = i;
+        option1.text = 'Image ' + i;
+        if (i === 1) option1.selected = true;
+        select1.appendChild(option1);
+
+        const option2 = document.createElement('option');
+        option2.value = i;
+        option2.text = 'Image ' + i;
+        if (i === 2) option2.selected = true;
+        select2.appendChild(option2);
+        }
+
+        // 更新图像函数
+        function updateImages() {
+        img1.src = `img/result${select1.value}.png`;
+        img2.src = `img/result${select2.value}.png`;
+        }
+
+        // 监听选择变化
+        select1.addEventListener('change', updateImages);
+        select2.addEventListener('change', updateImages);
+    </script>
+
     <h3>Prompting Method</h3>
     <table>
       <tr>
