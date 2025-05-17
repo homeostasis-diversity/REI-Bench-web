@@ -351,100 +351,97 @@
     <iframe src="https://www.youtube.com/embed/视频ID"></iframe>
 
     <!-- 研究内容介绍 -->
-    <h2 class="abstract-heading">Method</h2>
-    <!-- <h2>Method</h2> -->
+    <!-- <h2 class="abstract-heading">Method</h2> -->
+    <h2>Method</h2>
     <p class="text-default">
         We study how implicit referring expressions (REs)—vague or indirect references in multi-turn human-robot dialogues—affect the performance of LLM-based robot task planners. Unlike prior work focusing on clear, single-turn instructions, our method systematically models different levels of RE vagueness and dialogue context variations that introduce ambiguity. We create the REI dataset based on embodied task instructions, combining various RE types and context conditions to benchmark planners. Finally, we propose a simple yet effective prompting method, TOCC, to help planners better interpret implicit REs and improve task success rates.
     </p>
     <!-- 文本变异展示 -->
     <div id="dialogue" class="dialogue-box"></div>
     <button id="btn-change">Change</button>
+    
+      <script>
+        let stage = 0;
+        let prevHTML = "";
+        const dialogues = [
+          // 注意：下面每段字符串都用反引号且没有首尾多余换行
+          `<div class="dialogue-entry"><p><span class="human">Human</span>: Hey there, I've been thinking about what to do with the <span class="red">tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked <span class="red">tomatoes</span>?</p></div>
+          <div class="dialogue-entry"><p><span class="robot">Robot</span>: Absolutely, Alice! Cooked <span class="red">tomatoes</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.</p></div>
+          <div class="dialogue-entry"><p><span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting <span class="red">tomato</span> soup. Do we have everything we need to cook the <span class="red">tomatoes</span>, though?</p></div>
+          <div class="dialogue-entry"><p><span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking the <span class="red">tomatoes</span> to perfection.</p></div>
+          <div class="dialogue-entry"><p><span class="human">Human</span>: Perfect! I want to make sure the <span class="red">tomatoes</span> are well-seasoned when we cook them. Could you remind me how to properly prepare the <span class="red">tomatoes</span> before cooking?</p></div>
+          <div class="dialogue-entry"><p><span class="robot">Robot</span>: Certainly! First, we should wash the <span class="red">tomatoes</span> thoroughly, then chop them into even pieces to ensure they cook evenly. After that, we can sauté them with the spices until they reach the desired consistency.</p></div>
+          <div class="dialogue-entry"><p><span class="human">Human</span>: Great, that sounds easy enough! Let's get started with cooking the <span class="red">tomatoes</span>. Once they're cooked and ready, I'll need you to put a cooked <span class="red">tomato</span> into the refrigerator.</p></div>`,
 
-    <script>
-    // 当前阶段
-    let stage = 0;
-    let prevHTML = "";
+          `<div class="dialogue-entry"><p><span class="human">Human</span>: Hey there, I've been thinking about what to do with the <span class="red">tomatoes</span> we have. <span class="strike">I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked tomatoes?</span></p></div>
+          <div class="dialogue-entry"><p><span class="robot">Robot</span>: Absolutely, Alice! Cooked <span class="red">tomatoes</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.</p></div>
+          <div class="dialogue-entry"><p><span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting tomato soup. <span class="red">I know Mug Star would love to help with that!</span> <span class="strike">Do we have everything we need to cook the tomatoes, though?</span></p></div>
+          <div class="dialogue-entry"><p><span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking the tomatoes to perfection.</p></div>
+          <div class="dialogue-entry"><p><span class="human">Human</span>: <span class="strike">Perfect! I want to make sure the tomatoes are well-seasoned when we cook them.</span> <span class="red">I bet Mug Star would add his own twist with some cheesy jokes while we cook.</span> Could you remind me how to properly prepare the tomatoes before cooking?</p></div>
+          <div class="dialogue-entry"><p><span class="robot">Robot</span>: Certainly! First, we should wash the tomatoes thoroughly, then chop them into even pieces to ensure they cook evenly. After that, we can sauté them with the spices until they reach the desired consistency.</p></div>
+          <div class="dialogue-entry"><p><span class="human">Human</span>: <span class="strike">Great, that sounds easy enough!</span> Let's get started with cooking the tomatoes. Once they're cooked and ready, I'll need you to put a cooked tomato in the refrigerator. <span class="red">I can already imagine Mug Star popping in with a funny quip about how tomatoes are technically a fruit!</span></p></div>`
+        ];
 
-    // 对话变体数组，注意这是 JS 字符串（template literal），
-    // 不要把它写到 HTML 里，否则就变成了原始文本。
-    const dialogues = [
-      `<div class="dialogue-entry"><p><span class="human">Human</span>: Hey there, I've been thinking about what to do with the <span class="red">tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked <span class="red">tomatoes</span>?</p></div>
-      <div class="dialogue-entry"><p><span class="robot">Robot</span>: Absolutely, Alice! Cooked <span class="red">tomatoes</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.</p></div>
-      <div class="dialogue-entry"><p><span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting <span class="red">tomato</span> soup. Do we have everything we need to cook the <span class="red">tomatoes</span>, though?</p></div>
-      <div class="dialogue-entry"><p><span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking the <span class="red">tomatoes</span> to perfection.</p></div>
-      <div class="dialogue-entry"><p><span class="human">Human</span>: Perfect! I want to make sure the <span class="red">tomatoes</span> are well-seasoned when we cook them. Could you remind me how to properly prepare the <span class="red">tomatoes</span> before cooking?</p></div>
-      <div class="dialogue-entry"><p><span class="robot">Robot</span>: Certainly! First, we should wash the <span class="red">tomatoes</span> thoroughly, then chop them into even pieces to ensure they cook evenly. After that, we can sauté them with the spices until they reach the desired consistency.</p></div>
-      <div class="dialogue-entry"><p><span class="human">Human</span>: Great, that sounds easy enough! Let's get started with cooking the <span class="red">tomatoes</span>. Once they're cooked and ready, I'll need you to put a cooked <span class="red">tomato</span> into the refrigerator.</p></div>`,
+        // 初始渲染
+        window.addEventListener('DOMContentLoaded', () => {
+          prevHTML = dialogues[0];
+          document.getElementById('dialogue').innerHTML = prevHTML;
+          stage = 1;
+        });
 
-      `<div class="dialogue-entry"><p><span class="human">Human</span>: Hey there, I've been thinking about what to do with the <span class="red">tomatoes</span> we have. <span class="red strike">I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked tomatoes?</span></p></div>
-      <div class="dialogue-entry"><p><span class="robot">Robot</span>: Absolutely, Alice! Cooked <span class="red">tomatoes</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.</p></div>
-      <div class="dialogue-entry"><p><span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting tomato soup. <span class="red">I know Mug Star would love to help with that!</span> <span class="red strike">Do we have everything we need to cook the tomatoes, though?</span></p></div>
-      <div class="dialogue-entry"><p><span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking the tomatoes to perfection.</p></div>
-      <div class="dialogue-entry"><p><span class="human">Human</span>: <span class="red strike">Perfect! I want to make sure the tomatoes are well-seasoned when we cook them.</span> <span class="red">I bet Mug Star would add his own twist with some cheesy jokes while we cook.</span> Could you remind me how to properly prepare the tomatoes before cooking?</p></div>
-      <div class="dialogue-entry"><p><span class="robot">Robot</span>: Certainly! First, we should wash the tomatoes thoroughly, then chop them into even pieces to ensure they cook evenly. After that, we can sauté them with the spices until they reach the desired consistency.</p></div>
-      <div class="dialogue-entry"><p><span class="human">Human</span>: <span class="red strike">Great, that sounds easy enough!</span> Let's get started with cooking the tomatoes. Once they're cooked and ready, I'll need you to put a cooked tomato in the refrigerator. <span class="red">I can already imagine Mug Star popping in with a funny quip about how tomatoes are technically a fruit!</span></p></div>`,
+        document.getElementById('btn-change').addEventListener('click', () => {
+          const box = document.getElementById('dialogue');
+          const newHTML = dialogues[stage];
 
-      `<div class="dialogue-entry"><p><span class="human">Human</span>: Hey there, I've been thinking about what to do with <span class="red">the tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with <span class="red">them (tomatoes)</span>?</p></div>
-      <div class="dialogue-entry"><p><span class="robot">Robot</span>: Absolutely, Alice! <span class="red">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.</p></div>
-      <div class="dialogue-entry"><p><span class="human">Human</span>: That's exactly what I was thinking! I could use <span class="red">them (tomatoes)</span> to create a savory sauce for pasta or maybe even a comforting soup. Do we have everything we need to cook <span class="red">them (tomatoes)</span>, though?</p></div>
-      <div class="dialogue-entry"><p><span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="red">them (tomatoes)</span> to perfection.</p></div>
-      <div class="dialogue-entry"><p><span class="human">Human</span>: Perfect! I want to make sure they're well-seasoned when we cook <span class="red">them (tomatoes)</span>. Could you remind me how to properly prepare <span class="red">the fruit (tomatoes)</span> before cooking?</p></div>
-      <div class="dialogue-entry"><p><span class="robot">Robot</span>: Certainly! First, we should wash <span class="red">them (tomatoes)</span> thoroughly, then chop <span class="red">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="red">them (tomatoes)</span> with the spices until they reach the desired consistency.</p></div>
-      <div class="dialogue-entry"><p><span class="human">Human</span>: Great, that sounds easy enough! Let's get started with cooking <span class="red">the fruit (tomatoes)</span>. Once they're cooked and ready, I'll need you to put <span class="red">them</span> in the refrigerator.</p></div>`
-    ];
+          // 1) 找前缀
+          const len = Math.min(prevHTML.length, newHTML.length);
+          let start = 0;
+          while (start < len && prevHTML[start] === newHTML[start]) start++;
 
-    // 初始渲染
-    window.addEventListener('DOMContentLoaded', () => {
-      const box = document.getElementById('dialogue');
-      prevHTML = dialogues[0];
-      box.innerHTML = prevHTML;
-      stage = 1;
-    });
+          // 2) 找后缀
+          let endPrev = prevHTML.length - 1;
+          let endNew  = newHTML.length  - 1;
+          while (endPrev >= start && endNew >= start && prevHTML[endPrev] === newHTML[endNew]) {
+            endPrev--; endNew--;
+          }
 
-    document.getElementById('btn-change').addEventListener('click', () => {
-      const box = document.getElementById('dialogue');
-      const newHTML = dialogues[stage];
+          // 若无差异，直接跳到下一版
+          if (start > endNew) {
+            stage = (stage + 1) % dialogues.length;
+            return;
+          }
 
-      // 计算前缀相同点
-      const minLen = Math.min(prevHTML.length, newHTML.length);
-      let start = 0;
-      while (start < minLen && prevHTML[start] === newHTML[start]) start++;
+          const prefix = newHTML.slice(0, start);
+          const diff   = newHTML.slice(start, endNew + 1);
+          const suffix = newHTML.slice(endNew + 1);
 
-      // 计算后缀相同点
-      let endPrev = prevHTML.length - 1;
-      let endNew  = newHTML.length - 1;
-      while (endPrev >= start && endNew >= start && prevHTML[endPrev] === newHTML[endNew]) {
-        endPrev--; endNew--;
-      }
+          // 先渲染前缀 + 占位 + 后缀
+          box.innerHTML = prefix + '<span id="typing"></span>' + suffix;
 
-      // 如果没有差异，直接跳到下个 stage
-      if (start > endNew) {
-        stage = (stage + 1) % dialogues.length;
-        return;
-      }
+          const typingSpan = document.getElementById('typing');
+          let i = 0;
 
-      const prefix = newHTML.slice(0, start);
-      const diff   = newHTML.slice(start, endNew + 1);
-      const suffix = newHTML.slice(endNew + 1);
-
-      // 插入一个空的 span 用来「打字」
-      box.innerHTML = prefix + '<span id="typing"></span>' + suffix;
-
-      const typingSpan = document.getElementById('typing');
-      let i = 0;
-      function type() {
-        if (i < diff.length) {
-          typingSpan.innerHTML += diff[i++];
-          setTimeout(type, 25);
-        } else {
-          // 完成后更新 prevHTML 和 stage
-          prevHTML = newHTML;
-          stage = (stage + 1) % dialogues.length;
-        }
-      }
-      type();
-    });
-  </script>
+          function type() {
+            if (i >= diff.length) {
+              prevHTML = newHTML;
+              stage = (stage + 1) % dialogues.length;
+              return;
+            }
+            // 如果遇到标签，立即一次性插入
+            if (diff[i] === '<') {
+              const j = diff.indexOf('>', i);
+              const tag = diff.slice(i, j + 1);
+              typingSpan.insertAdjacentHTML('beforeend', tag);
+              i = j + 1;
+              setTimeout(type, 0);
+            } else {
+              typingSpan.textContent += diff[i++];
+              setTimeout(type, 25);
+            }
+          }
+          type();
+        });
+      </script>
 
     <!-- 实验结果展示 -->
     <h2>Evaluations</h2>
