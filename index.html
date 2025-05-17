@@ -282,65 +282,54 @@
     <h3 style="text-align: left;">Benchmark Result</h3>
 
     <!-- 主展示区 -->
-    <div class="image-display">
-    <img id="imgLeft" src="media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" alt="llama_saycan">
-    <img id="imgRight" src="media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" alt="gpt_saycan">
-    </div>
-
-    <!-- 选择控件 -->
-    <div class="selector">
-      <div>
-        <label for="selectLeft">Select Left Image:</label>
-        <select id="selectLeft"></select>
-      </div>
-      <div>
-        <label for="selectRight">Select Right Image:</label>
-        <select id="selectRight"></select>
-      </div>
+    <div class="image-display" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+        <div>
+            <img id="imgLeft" src="media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" alt="llama_saycan" width="400">
+            <p id="labelLeft" style="text-align: center;">LLaMA3.1-8B + SayCan</p>
+            <input type="range" id="sliderLeft" min="0" max="11" value="0" style="width: 400px;">
+        </div>
+        <div>
+            <img id="imgRight" src="media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" alt="gpt_saycan" width="400">
+            <p id="labelRight" style="text-align: center;">GPT-4o-mini + SayCan</p>
+            <input type="range" id="sliderRight" min="0" max="11" value="1" style="width: 400px;">
+        </div>
     </div>
 
     <script>
-      const imageList = [
-        { name: "LLaMA3.1-8B + SayCan", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" },
-        { name: "GPT-4o-mini + SayCan", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" },
-        { name: "DeepSeekMath-7B + SayCan", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__SayCan.jpg" },
-        { name: "Gemma2-9B + SayCan", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__SayCan.jpg" },
-        { name: "Ministral-8B + SayCan", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__SayCan.jpg" },
-        { name: "Qwen2.5-7B + SayCan", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__SayCan.jpg" },
-        { name: "LLaMA3.1-8B + LLM+P", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__LLM+P.jpg" },
-        { name: "GPT-4o-mini + LLM+P", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__LLM+P.jpg" },
-        { name: "DeepSeekMath-7B + LLM+P", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__LLM+P.jpg" },
-        { name: "Gemma2-9B + LLM+P", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__LLM+P.jpg" },
-        { name: "Ministral-8B + LLM+P", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__LLM+P.jpg" },
-        { name: "Qwen2.5-7B + LLM+P", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__LLM+P.jpg" },
-      ];
+        const imageList = [
+            { name: "LLaMA3.1-8B + SayCan", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" },
+            { name: "GPT-4o-mini + SayCan", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" },
+            { name: "DeepSeekMath-7B + SayCan", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__SayCan.jpg" },
+            { name: "Gemma2-9B + SayCan", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__SayCan.jpg" },
+            { name: "Ministral-8B + SayCan", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__SayCan.jpg" },
+            { name: "Qwen2.5-7B + SayCan", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__SayCan.jpg" },
+            { name: "LLaMA3.1-8B + LLM+P", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__LLM+P.jpg" },
+            { name: "GPT-4o-mini + LLM+P", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__LLM+P.jpg" },
+            { name: "DeepSeekMath-7B + LLM+P", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__LLM+P.jpg" },
+            { name: "Gemma2-9B + LLM+P", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__LLM+P.jpg" },
+            { name: "Ministral-8B + LLM+P", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__LLM+P.jpg" },
+            { name: "Qwen2.5-7B + LLM+P", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__LLM+P.jpg" },
+        ];
 
-      const selectLeft = document.getElementById("selectLeft");
-      const selectRight = document.getElementById("selectRight");
-      const imgLeft = document.getElementById("imgLeft");
-      const imgRight = document.getElementById("imgRight");
+        const sliderLeft = document.getElementById("sliderLeft");
+        const sliderRight = document.getElementById("sliderRight");
+        const imgLeft = document.getElementById("imgLeft");
+        const imgRight = document.getElementById("imgRight");
+        const labelLeft = document.getElementById("labelLeft");
+        const labelRight = document.getElementById("labelRight");
 
-      imageList.forEach((item, index) => {
-        const optL = document.createElement("option");
-        optL.value = item.path;
-        optL.text = item.name;
-        if (index === 0) optL.selected = true;
-        selectLeft.appendChild(optL);
+        function updateImages() {
+            const indexLeft = parseInt(sliderLeft.value);
+            const indexRight = parseInt(sliderRight.value);
+            imgLeft.src = imageList[indexLeft].path;
+            labelLeft.textContent = imageList[indexLeft].name;
 
-        const optR = document.createElement("option");
-        optR.value = item.path;
-        optR.text = item.name;
-        if (index === 1) optR.selected = true;
-        selectRight.appendChild(optR);
-      });
+            imgRight.src = imageList[indexRight].path;
+            labelRight.textContent = imageList[indexRight].name;
+        }
 
-      function updateImages() {
-        imgLeft.src = selectLeft.value;
-        imgRight.src = selectRight.value;
-      }
-
-      selectLeft.addEventListener("change", updateImages);
-      selectRight.addEventListener("change", updateImages);
+        sliderLeft.addEventListener("input", updateImages);
+        sliderRight.addEventListener("input", updateImages);
     </script>
 
 
