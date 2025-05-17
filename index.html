@@ -171,39 +171,59 @@
     }
 
     /* diff-match-patch 用于文本差异比较 这里是打字框样式 */
+    .dialogue-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .dialogue-row {
+      display: flex;
+      align-items: flex-start;
+      width: 700px;
+      margin: 12px 0;
+    }
+
+    .dialogue-row.human {
+      flex-direction: row;
+    }
+
+    .dialogue-row.robot {
+      flex-direction: row-reverse;
+    }
+
+    .icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 12px;
+    }
+
     .dialogue-bubble {
-      max-width: 600px;
+      width: 600px;
+      min-height: 120px;
       padding: 16px;
-      margin: 12px auto;
       border-radius: 10px;
       background-color: #f9f9f9;
       border: 2px solid #000;
       font-size: 1em;
-      text-align: left;
-      position: relative;
       white-space: pre-wrap;
+      line-height: 1.5em;
     }
 
     .dialogue-bubble.human {
       background-color: #ffffff;
       border-color: #000;
-      align-self: flex-start;
     }
 
     .dialogue-bubble.robot {
       background-color: #f0f0f0;
       border-color: #444;
-      align-self: flex-end;
-    }
-
-    .dialogue-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
 
     .red {
       color: red;
+      cursor: pointer;
     }
  
     /* 可互动图片展示区域样式 */
@@ -314,51 +334,37 @@
         Method
     </p>
     <!-- 文本变异展示 -->
-    <div id="dialogue-container"></div>
-    <!-- <p><span class="human">Human</span>: Hey there, I've been thinking about what to do with the <span class="red">tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked <span class="red">tomatoes</span>?</p>
-    <p><span class="robot">Robot</span>: Absolutely, Alice! Cooked <span class="red">tomatoes</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.</p>
-    <p><span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting <span class="red">tomato</span> soup. Do we have everything we need to cook the <span class="red">tomatoes</span>, though?</p>
-    <p><span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking the <span class="red">tomatoes</span> to perfection.</p>
-    <p><span class="human">Human</span>: Perfect! I want to make sure the <span class="red">tomatoes</span> are well-seasoned when we cook them. Could you remind me how to properly prepare the <span class="red">tomatoes</span> before cooking?</p>
-    <p><span class="robot">Robot</span>: Certainly! First, we should wash the <span class="red">tomatoes</span> thoroughly, then chop them into even pieces to ensure they cook evenly. After that, we can sauté them with the spices until they reach the desired consistency.</p>
-    <p><span class="human">Human</span>: Great, that sounds easy enough! Let's get started with cooking the <span class="red">tomatoes</span>. Once they're cooked and ready, I'll need you to put a cooked <span class="red">tomato</span> into the refrigerator.</p>
-  </div> -->
+    <div id="dialogue-container" class="dialogue-container"></div>
   <button onclick="applyVariation()">变异</button>
 
   <script>
     const dialogueData = [
       {
         speaker: "human",
-        text: "Hey there, I've been thinking about what to do with the <span class='red'>tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked <span class='red'>tomatoes</span>?"
+        text: `Hey there, I've been thinking about what to do with the <span class='red' onclick="mutateText(this)">tomatoes</span> we have.`
       },
       {
         speaker: "robot",
-        text: "Absolutely, Alice! Cooked <span class='red'>tomatoes</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal."
+        text: `Cooked <span class='red' onclick="mutateText(this)">tomatoes</span> can be used in sauces, soups, or salads.`
       },
       {
         speaker: "human",
-        text: "That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting <span class='red'>tomato</span> soup. Do we have everything we need to cook the <span class='red'>tomatoes</span>, though?"
-      },
-      {
-        speaker: "robot",
-        text: "Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking the <span class='red'>tomatoes</span> to perfection."
-      },
-      {
-        speaker: "human",
-        text: "Perfect! I want to make sure the <span class='red'>tomatoes</span> are used well. Thanks!"
+        text: `Perfect! I want to make sure the <span class='red' onclick="mutateText(this)">tomatoes</span> are used well. Thanks!`
       }
     ];
 
     const container = document.getElementById("dialogue-container");
 
-    function typeText(element, html, speed = 25) {
-      let i = 0;
-      const temp = document.createElement("div");
+    function typeText(element, html, speed = 5, callback) {
+      let temp = document.createElement("div");
       temp.innerHTML = html;
       const nodes = Array.from(temp.childNodes);
 
       function typeNode(nodeList, index) {
-        if (index >= nodeList.length) return;
+        if (index >= nodeList.length) {
+          callback?.();
+          return;
+        }
         const node = nodeList[index];
         if (node.nodeType === Node.TEXT_NODE) {
           let text = node.textContent;
@@ -377,27 +383,53 @@
         } else if (node.nodeType === Node.ELEMENT_NODE) {
           let el = document.createElement(node.tagName);
           el.className = node.className;
+          if (node.getAttribute("onclick")) {
+            el.setAttribute("onclick", node.getAttribute("onclick"));
+          }
           element.appendChild(el);
-          typeNode(Array.from(node.childNodes), 0);
-          typeNode(nodeList, index + 1);
+          typeText(el, node.innerHTML, speed, () => {
+            typeNode(nodeList, index + 1);
+          });
         }
       }
-
       typeNode(nodes, 0);
     }
 
     function displayDialogues(index = 0) {
       if (index >= dialogueData.length) return;
       const data = dialogueData[index];
+
+      const row = document.createElement("div");
+      row.className = `dialogue-row ${data.speaker}`;
+
+      const img = document.createElement("img");
+      img.src = data.speaker === "human" ? "human-icon.png" : "robot-icon.png";
+      img.className = "icon";
+
       const bubble = document.createElement("div");
       bubble.className = `dialogue-bubble ${data.speaker}`;
-      container.appendChild(bubble);
-      typeText(bubble, data.text, 20);
-      setTimeout(() => displayDialogues(index + 1), data.text.length * 20 + 1000);
+
+      row.appendChild(img);
+      row.appendChild(bubble);
+      container.appendChild(row);
+
+      typeText(bubble, data.text, 5, () => {
+        setTimeout(() => displayDialogues(index + 1), 600);
+      });
+    }
+
+    // 保留点击变异逻辑（可根据需要替换变异内容）
+    function mutateText(el) {
+      if (el.innerText === "tomatoes") {
+        el.innerText = "🍅";
+        el.style.color = "green";
+      } else {
+        el.innerText = "tomatoes";
+        el.style.color = "red";
+      }
     }
 
     window.addEventListener("DOMContentLoaded", () => {
-      container.className = "dialogue-container";
       displayDialogues();
     });
   </script>
