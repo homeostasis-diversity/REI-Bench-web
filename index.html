@@ -170,27 +170,59 @@
     }
 
     /* 可互动图片展示区域样式 */
+    .image-display {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
     .image-display img {
-      width: 300px;
+      max-width: 90%;
+      width: 500px;
       height: auto;
-      border: 2px solid #aaa;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      border-radius: 1rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .image-display img:hover {
+      transform: scale(1.02);
     }
 
     .selector {
       display: flex;
       justify-content: center;
-      gap: 40px;
+      gap: 3rem;
+      flex-wrap: wrap;
     }
 
-    select {
-      padding: 8px;
-      font-size: 16px;
+    .selector div {
+      background: #fff;
+      padding: 1rem 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .selector div:hover {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
     }
 
     label {
       font-weight: bold;
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    select {
+      font-size: 1rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+      width: 100%;
     }
   </style>
 </head>
@@ -251,64 +283,64 @@
 
     <!-- 主展示区 -->
     <div class="image-display">
-        <img id="imgLeft" src="media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" alt="llama_saycan" width="400">
-        <img id="imgRight" src="media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" alt="gpt_saycan" width="400">
+    <img id="imgLeft" src="media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" alt="llama_saycan">
+    <img id="imgRight" src="media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" alt="gpt_saycan">
     </div>
 
     <!-- 选择控件 -->
     <div class="selector">
-        <div>
-            <label for="selectLeft">Select Left Image:</label><br>
-            <select id="selectLeft"></select>
-        </div>
-        <div>
-            <label for="selectRight">Select Right Image:</label><br>
-            <select id="selectRight"></select>
-        </div>
+      <div>
+        <label for="selectLeft">Select Left Image:</label>
+        <select id="selectLeft"></select>
+      </div>
+      <div>
+        <label for="selectRight">Select Right Image:</label>
+        <select id="selectRight"></select>
+      </div>
     </div>
 
     <script>
-        const imageList = [
-            { name: "LLaMA3.1-8B + SayCan", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" },
-            { name: "GPT-4o-mini + SayCan", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" },
-            { name: "DeepSeekMath-7B + SayCan", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__SayCan.jpg" },
-            { name: "Gemma2-9B + SayCan", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__SayCan.jpg" },
-            { name: "Ministral-8B + SayCan", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__SayCan.jpg" },
-            { name: "Qwen2.5-7B + SayCan", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__SayCan.jpg" },
-            { name: "LLaMA3.1-8B + LLM+P", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__LLM+P.jpg" },
-            { name: "GPT-4o-mini + LLM+P", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__LLM+P.jpg" },
-            { name: "DeepSeekMath-7B + LLM+P", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__LLM+P.jpg" },
-            { name: "Gemma2-9B + LLM+P", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__LLM+P.jpg" },
-            { name: "Ministral-8B + LLM+P", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__LLM+P.jpg" },
-            { name: "Qwen2.5-7B + LLM+P", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__LLM+P.jpg" },
-        ];
+      const imageList = [
+        { name: "LLaMA3.1-8B + SayCan", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" },
+        { name: "GPT-4o-mini + SayCan", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" },
+        { name: "DeepSeekMath-7B + SayCan", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__SayCan.jpg" },
+        { name: "Gemma2-9B + SayCan", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__SayCan.jpg" },
+        { name: "Ministral-8B + SayCan", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__SayCan.jpg" },
+        { name: "Qwen2.5-7B + SayCan", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__SayCan.jpg" },
+        { name: "LLaMA3.1-8B + LLM+P", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__LLM+P.jpg" },
+        { name: "GPT-4o-mini + LLM+P", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__LLM+P.jpg" },
+        { name: "DeepSeekMath-7B + LLM+P", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__LLM+P.jpg" },
+        { name: "Gemma2-9B + LLM+P", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__LLM+P.jpg" },
+        { name: "Ministral-8B + LLM+P", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__LLM+P.jpg" },
+        { name: "Qwen2.5-7B + LLM+P", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__LLM+P.jpg" },
+      ];
 
-        const selectLeft = document.getElementById("selectLeft");
-        const selectRight = document.getElementById("selectRight");
-        const imgLeft = document.getElementById("imgLeft");
-        const imgRight = document.getElementById("imgRight");
+      const selectLeft = document.getElementById("selectLeft");
+      const selectRight = document.getElementById("selectRight");
+      const imgLeft = document.getElementById("imgLeft");
+      const imgRight = document.getElementById("imgRight");
 
-        imageList.forEach((item, index) => {
-            const optL = document.createElement("option");
-            optL.value = item.path;
-            optL.text = item.name;
-            if (index === 0) optL.selected = true;
-            selectLeft.appendChild(optL);
+      imageList.forEach((item, index) => {
+        const optL = document.createElement("option");
+        optL.value = item.path;
+        optL.text = item.name;
+        if (index === 0) optL.selected = true;
+        selectLeft.appendChild(optL);
 
-            const optR = document.createElement("option");
-            optR.value = item.path;
-            optR.text = item.name;
-            if (index === 1) optR.selected = true;
-            selectRight.appendChild(optR);
-        });
+        const optR = document.createElement("option");
+        optR.value = item.path;
+        optR.text = item.name;
+        if (index === 1) optR.selected = true;
+        selectRight.appendChild(optR);
+      });
 
-        function updateImages() {
-            imgLeft.src = selectLeft.value;
-            imgRight.src = selectRight.value;
-        }
+      function updateImages() {
+        imgLeft.src = selectLeft.value;
+        imgRight.src = selectRight.value;
+      }
 
-        selectLeft.addEventListener("change", updateImages);
-        selectRight.addEventListener("change", updateImages);
+      selectLeft.addEventListener("change", updateImages);
+      selectRight.addEventListener("change", updateImages);
     </script>
 
 
