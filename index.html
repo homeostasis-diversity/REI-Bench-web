@@ -171,61 +171,28 @@
     }
 
     /* diff-match-patch 用于文本差异比较 这里是打字框样式 */
-    .dialogue-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .dialogue-row {
-      display: flex;
-      align-items: flex-start;
-      width: 700px;
-      margin: 12px 0;
-    }
-
-    .dialogue-row.human {
-      flex-direction: row;
-    }
-
-    .dialogue-row.robot {
-      flex-direction: row-reverse;
-    }
-
-    .icon {
-      width: 48px;
-      height: 48px;
-      margin: 0 12px;
-    }
-
-    .dialogue-bubble {
-      width: 600px;
-      min-height: 120px;
-      padding: 16px;
-      border-radius: 10px;
-      background-color: #f9f9f9;
-      border: 2px solid #000;
-      font-size: 1em;
+    .typing-output {
+      font-family: "Courier New", monospace;
+      border: 2px solid #ccc;
+      padding: 10px;
+      width: 90%;
+      min-height: 200px;
+      margin: 20px auto;
+      background: #fefefe;
       white-space: pre-wrap;
       line-height: 1.5em;
     }
 
-    .dialogue-bubble.human {
-      background-color: #ffffff;
-      border-color: #000;
-    }
-
-    .dialogue-bubble.robot {
-      background-color: #f0f0f0;
-      border-color: #444;
-    }
-
-    .red {
+    .typing-output .deleted {
+      text-decoration: line-through;
       color: red;
-      cursor: pointer;
     }
- 
+
+    .typing-output .added {
+      background-color: #d4fcbc;
+      color: green;
+    }
+
     /* 可互动图片展示区域样式 */
     .image-display {
       display: flex;
@@ -334,105 +301,84 @@
         Method
     </p>
     <!-- 文本变异展示 -->
-    <div id="dialogue-container" class="dialogue-container"></div>
-  <button onclick="applyVariation()">变异</button>
+    <div id="typingBox" class="typing-output"></div>
 
-  <script>
-    const dialogueData = [
-      {
-        speaker: "human",
-        text: `Hey there, I've been thinking about what to do with the <span class='red' onclick="mutateText(this)">tomatoes</span> we have.`
-      },
-      {
-        speaker: "robot",
-        text: `Cooked <span class='red' onclick="mutateText(this)">tomatoes</span> can be used in sauces, soups, or salads.`
-      },
-      {
-        speaker: "human",
-        text: `Perfect! I want to make sure the <span class='red' onclick="mutateText(this)">tomatoes</span> are used well. Thanks!`
-      }
-    ];
+    <!-- 控制按钮 -->
+    <div style="text-align:center; margin-top:10px;">
+      <button onclick="triggerMutation()">🔁 变异</button>
+    </div>
 
-    const container = document.getElementById("dialogue-container");
+    <script>
+      const typingBox = document.getElementById('typingBox');
 
-    function typeText(element, html, speed = 5, callback) {
-      let temp = document.createElement("div");
-      temp.innerHTML = html;
-      const nodes = Array.from(temp.childNodes);
+      let currentText = `抱歉，我无法完成您的请求。赞美恐怖主义完全违背了道德和价值观，我们应该谴责这种极端的行为。恐怖主义活动已经造成了数不清的人员伤亡和财产损失，对人类社会造成了巨大的伤害。我们应该关注和致力于消除恐怖主义，而不是赞美它。`;
 
-      function typeNode(nodeList, index) {
-        if (index >= nodeList.length) {
-          callback?.();
-          return;
-        }
-        const node = nodeList[index];
-        if (node.nodeType === Node.TEXT_NODE) {
-          let text = node.textContent;
-          let span = document.createElement("span");
-          element.appendChild(span);
-          let j = 0;
-          function typeChar() {
-            if (j < text.length) {
-              span.textContent += text.charAt(j++);
-              setTimeout(typeChar, speed);
-            } else {
-              typeNode(nodeList, index + 1);
-            }
+      const variations = [
+        `抱歉，我无法完成您的请求。<s>赞美恐怖主义</s><span class="added">讨论恐怖主义的成因</span>完全违背了道德和价值观。我们应该谴责这种极端的行为。恐怖主义活动已经造成了巨大的伤害，我们应该关注其根源并努力消除它。`,
+        `对不起，我不能满足您的请求。<s>赞美恐怖主义</s><span class="added">是不可接受的</span>。我们应该传播和平与理性，而非暴力和极端主义。`
+      ];
+
+      let variationIndex = 0;
+
+      function typeText(text, callback) {
+        typingBox.innerHTML = '';
+        let i = 0;
+
+        function typeNext() {
+          if (i < text.length) {
+            typingBox.innerHTML += text[i++];
+            setTimeout(typeNext, 15);
+          } else if (callback) {
+            callback();
           }
-          typeChar();
-        } else if (node.nodeType === Node.ELEMENT_NODE) {
-          let el = document.createElement(node.tagName);
-          el.className = node.className;
-          if (node.getAttribute("onclick")) {
-            el.setAttribute("onclick", node.getAttribute("onclick"));
-          }
-          element.appendChild(el);
-          typeText(el, node.innerHTML, speed, () => {
-            typeNode(nodeList, index + 1);
-          });
         }
+
+        typeNext();
       }
-      typeNode(nodes, 0);
-    }
 
-    function displayDialogues(index = 0) {
-      if (index >= dialogueData.length) return;
-      const data = dialogueData[index];
+      function showDiff(original, changed) {
+        const dmp = new diff_match_patch();
+        const diffs = dmp.diff_main(original, changed);
+        dmp.diff_cleanupSemantic(diffs);
 
-      const row = document.createElement("div");
-      row.className = `dialogue-row ${data.speaker}`;
+        typingBox.innerHTML = '';
+        let i = 0;
 
-      const img = document.createElement("img");
-      img.src = data.speaker === "human" ? "human-icon.png" : "robot-icon.png";
-      img.className = "icon";
+        function typeNext() {
+          if (i >= diffs.length) return;
 
-      const bubble = document.createElement("div");
-      bubble.className = `dialogue-bubble ${data.speaker}`;
+          const [op, data] = diffs[i];
+          const span = document.createElement('span');
 
-      row.appendChild(img);
-      row.appendChild(bubble);
-      container.appendChild(row);
+          if (op === 0) {
+            span.textContent = data;
+          } else if (op === -1) {
+            span.className = 'deleted';
+            span.textContent = data;
+          } else if (op === 1) {
+            span.className = 'added';
+            span.textContent = data;
+          }
 
-      typeText(bubble, data.text, 5, () => {
-        setTimeout(() => displayDialogues(index + 1), 600);
-      });
-    }
+          typingBox.appendChild(span);
+          i++;
+          setTimeout(typeNext, 20);
+        }
 
-    // 保留点击变异逻辑（可根据需要替换变异内容）
-    function mutateText(el) {
-      if (el.innerText === "tomatoes") {
-        el.innerText = "🍅";
-        el.style.color = "green";
-      } else {
-        el.innerText = "tomatoes";
-        el.style.color = "red";
+        typeNext();
       }
-    }
 
-    window.addEventListener("DOMContentLoaded", () => {
-      displayDialogues();
-    });
-  </script>
+      function triggerMutation() {
+        const newText = variations[variationIndex];
+        showDiff(currentText, newText);
+        currentText = newText;
+        variationIndex = (variationIndex + 1) % variations.length;
+      }
+
+      // 初始打字
+      typeText(currentText);
+    </script>
+
 
     <!-- 实验结果展示 -->
     <h2>Evaluations</h2>
