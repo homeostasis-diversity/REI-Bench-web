@@ -171,44 +171,82 @@
     }
 
     /* diff-match-patch 用于文本差异比较 这里是打字框样式 */
+    /* === 容器 === */
     .dialogue-box {
-      border: 2px solid #e57373;
-      background-color: #fff5f5;
-      padding: 16px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
-    .dialogue-entry {
-      margin: 10px 0;
-      padding: 12px;
+      background: #fafafa;               /* 整体背景 */
+      border: 1px solid #e0e0e0;         /* 细边框 */
       border-radius: 12px;
-      background-color: #f9f9f9;
-    }
-    .human {
-      color: #0074D9;
-      font-weight: bold;
-    }
-    .robot {
-      color: #2ECC40;
-      font-weight: bold;
-    }
-    .red { color: red; }
-    .blue-strike { color: blue; text-decoration: line-through; }
-    .orange { color: orange; }
-    button {
-      padding: 8px 16px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: none;
-      background-color: salmon;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #d15858;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,.04);
     }
 
-    
+    /* === 单条对话 === */
+    .dialogue-entry {
+      max-width: 80%;
+      padding: 14px 18px;
+      border-radius: 14px;
+      margin: 12px 0;
+      line-height: 1.5;
+      box-shadow: 0 2px 4px rgba(0,0,0,.06);
+      font-size: 16px;
+    }
+
+    /* human 左侧灰色气泡 */
+    .dialogue-entry .human {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 600;
+      color: #3b82f6;        /* 蓝色昵称 */
+    }
+    .dialogue-entry:nth-child(odd) {
+      background: #f3f4f6;   /* 浅灰 */
+      border-top-left-radius: 4px;   /* 让左右气泡有“尖角”视觉 */
+      align-self: flex-start;
+    }
+
+    /* robot 右侧绿色气泡 */
+    .dialogue-entry .robot {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 600;
+      color: #22c55e;        /* 绿色昵称 */
+    }
+    .dialogue-entry:nth-child(even) {
+      background: #e8f8ec;   /* 浅绿 */
+      border-top-right-radius: 4px;
+      margin-left: auto;     /* 右对齐 */
+    }
+
+    /* === 文字强调 === */
+    .red    { color: #ef4444; }
+    .orange { color: #fb923c; }
+    .blue-strike {
+      color: #3b82f6;
+      text-decoration: line-through;
+    }
+
+    /* === 按钮 === */
+    button {
+      display: inline-block;
+      padding: 10px 22px;
+      font-size: 15px;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(90deg,#ff7b7b,#ff5064); /* 渐变 */
+      color: #fff;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,.15);
+    }
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0,0,0,.2);
+    }
+
     /* 可互动图片展示区域样式 */
     .image-display {
       display: flex;
@@ -313,9 +351,8 @@
 
     <!-- 研究内容介绍 -->
     <h2>Method</h2>
-    <h2 class="abstract-heading">Abstract</h2>
     <p class="text-default">
-        Method
+        We study how implicit referring expressions (REs)—vague or indirect references in multi-turn human-robot dialogues—affect the performance of LLM-based robot task planners. Unlike prior work focusing on clear, single-turn instructions, our method systematically models different levels of RE vagueness and dialogue context variations that introduce ambiguity. We create the REI dataset based on embodied task instructions, combining various RE types and context conditions to benchmark planners. Finally, we propose a simple yet effective prompting method, TOCC, to help planners better interpret implicit REs and improve task success rates.
     </p>
     <!-- 文本变异展示 -->
     <div id="dialogue" class="dialogue-box">
