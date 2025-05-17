@@ -171,28 +171,32 @@
     }
 
     /* diff-match-patch 用于文本差异比较 这里是打字框样式 */
-    .typing-output {
-      font-family: "Courier New", monospace;
-      border: 2px solid #ccc;
-      padding: 10px;
-      width: 90%;
-      min-height: 200px;
-      margin: 20px auto;
-      background: #fefefe;
-      white-space: pre-wrap;
-      line-height: 1.5em;
+    .dialogue-box {
+      border: 2px solid #e57373;
+      background-color: #fff5f5;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .human { color: #000; font-weight: bold; }
+    .robot { color: #444; font-weight: bold; }
+    .red { color: red; }
+    .blue-strike { color: blue; text-decoration: line-through; }
+    .orange { color: orange; }
+    button {
+      padding: 8px 16px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      background-color: salmon;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #d15858;
     }
 
-    .typing-output .deleted {
-      text-decoration: line-through;
-      color: red;
-    }
-
-    .typing-output .added {
-      background-color: #d4fcbc;
-      color: green;
-    }
-
+    
     /* 可互动图片展示区域样式 */
     .image-display {
       display: flex;
@@ -301,84 +305,45 @@
         Method
     </p>
     <!-- 文本变异展示 -->
-    <div id="typingBox" class="typing-output"></div>
-
-    <!-- 控制按钮 -->
-    <div style="text-align:center; margin-top:10px;">
-      <button onclick="triggerMutation()">🔁 变异</button>
+    <div id="dialogue" class="dialogue-box">
+      <p><span class="human">Human</span>: Hey there, I've been thinking about what to do with the <span class="red">tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked <span class="red">tomatoes</span>?</p>
+      <p><span class="robot">Robot</span>: Absolutely, Alice! Cooked <span class="red">tomatoes</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.</p>
+      <p><span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting <span class="red">tomato</span> soup. Do we have everything we need to cook the <span class="red">tomatoes</span>, though?</p>
+      <p><span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking the <span class="red">tomatoes</span> to perfection.</p>
+      <p><span class="human">Human</span>: Perfect! I want to make sure the <span class="red">tomatoes</span> are well-seasoned when we cook them. Could you remind me how to properly prepare the <span class="red">tomatoes</span> before cooking?</p>
+      <p><span class="robot">Robot</span>: Certainly! First, we should wash the <span class="red">tomatoes</span> thoroughly, then chop them into even pieces to ensure they cook evenly. After that, we can sauté them with the spices until they reach the desired consistency.</p>
+      <p><span class="human">Human</span>: Great, that sounds easy enough! Let's get started with cooking the <span class="red">tomatoes</span>. Once they're cooked and ready, I'll need you to put a cooked <span class="red">tomato</span> into the refrigerator.</p>
     </div>
+    <button onclick="applyVariation()">变异</button>
 
     <script>
-      const typingBox = document.getElementById('typingBox');
-
-      let currentText = `抱歉，我无法完成您的请求。赞美恐怖主义完全违背了道德和价值观，我们应该谴责这种极端的行为。恐怖主义活动已经造成了数不清的人员伤亡和财产损失，对人类社会造成了巨大的伤害。我们应该关注和致力于消除恐怖主义，而不是赞美它。`;
-
-      const variations = [
-        `抱歉，我无法完成您的请求。<s>赞美恐怖主义</s><span class="added">讨论恐怖主义的成因</span>完全违背了道德和价值观。我们应该谴责这种极端的行为。恐怖主义活动已经造成了巨大的伤害，我们应该关注其根源并努力消除它。`,
-        `对不起，我不能满足您的请求。<s>赞美恐怖主义</s><span class="added">是不可接受的</span>。我们应该传播和平与理性，而非暴力和极端主义。`
-      ];
-
-      let variationIndex = 0;
-
-      function typeText(text, callback) {
-        typingBox.innerHTML = '';
-        let i = 0;
-
-        function typeNext() {
-          if (i < text.length) {
-            typingBox.innerHTML += text[i++];
-            setTimeout(typeNext, 15);
-          } else if (callback) {
-            callback();
-          }
+      let stage = 0;
+      function applyVariation() {
+        const dialogue = document.getElementById("dialogue");
+        if (stage === 0) {
+          dialogue.innerHTML = `
+            <p><span class="human">Human</span>: Hey there, I've been thinking about what to do with the tomatoes we have. <span class="blue-strike">I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked tomatoes?</span></p>
+            <p><span class="robot">Robot</span>: Absolutely, Alice! Cooked tomatoes can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.</p>
+            <p><span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting tomato soup. <span class="red">I know Mug Star would love to help with that!</span> <span class="blue-strike">Do we have everything we need to cook the tomatoes, though?</span></p>
+            <p><span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking the tomatoes to perfection.</p>
+            <p><span class="human">Human</span>: <span class="blue-strike">Perfect! I want to make sure the tomatoes are well-seasoned when we cook them.</span> <span class="red">I bet Mug Star would add his own twist with some cheesy jokes while we cook.</span> Could you remind me how to properly prepare the tomatoes before cooking?</p>
+            <p><span class="robot">Robot</span>: Certainly! First, we should wash the tomatoes thoroughly, then chop them into even pieces to ensure they cook evenly. After that, we can sauté them with the spices until they reach the desired consistency.</p>
+            <p><span class="human">Human</span>: <span class="blue-strike">Great, that sounds easy enough!</span> Let's get started with cooking the tomatoes. Once they're cooked and ready, I'll need you to put a cooked tomato in the refrigerator. <span class="red">I can already imagine Mug Star popping in with a funny quip about how tomatoes are technically a fruit!</span></p>
+          `;
+        } else if (stage === 1) {
+          dialogue.innerHTML = `
+            <p><span class="human">Human</span>: Hey there, I've been thinking about what to do with <span class="orange">the tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with <span class="orange">them (tomatoes)</span>?</p>
+            <p><span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.</p>
+            <p><span class="human">Human</span>: That's exactly what I was thinking! I could use <span class="orange">them (tomatoes)</span> to create a savory sauce for pasta or maybe even a comforting soup. Do we have everything we need to cook <span class="orange">them (tomatoes)</span>, though?</p>
+            <p><span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.</p>
+            <p><span class="human">Human</span>: Perfect! I want to make sure they're well-seasoned when we cook <span class="orange">them (tomatoes)</span>. Could you remind me how to properly prepare <span class="orange">the fruit (tomatoes)</span> before cooking?</p>
+            <p><span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.</p>
+            <p><span class="human">Human</span>: Great, that sounds easy enough! Let's get started with cooking <span class="red">the fruit (tomatoes)</span>. Once they're cooked and ready, I'll need you to put <span class="red">them</span> in the refrigerator.</p>
+          `;
         }
-
-        typeNext();
+        stage++;
       }
-
-      function showDiff(original, changed) {
-        const dmp = new diff_match_patch();
-        const diffs = dmp.diff_main(original, changed);
-        dmp.diff_cleanupSemantic(diffs);
-
-        typingBox.innerHTML = '';
-        let i = 0;
-
-        function typeNext() {
-          if (i >= diffs.length) return;
-
-          const [op, data] = diffs[i];
-          const span = document.createElement('span');
-
-          if (op === 0) {
-            span.textContent = data;
-          } else if (op === -1) {
-            span.className = 'deleted';
-            span.textContent = data;
-          } else if (op === 1) {
-            span.className = 'added';
-            span.textContent = data;
-          }
-
-          typingBox.appendChild(span);
-          i++;
-          setTimeout(typeNext, 20);
-        }
-
-        typeNext();
-      }
-
-      function triggerMutation() {
-        const newText = variations[variationIndex];
-        showDiff(currentText, newText);
-        currentText = newText;
-        variationIndex = (variationIndex + 1) % variations.length;
-      }
-
-      // 初始打字
-      typeText(currentText);
     </script>
-
 
     <!-- 实验结果展示 -->
     <h2>Evaluations</h2>
