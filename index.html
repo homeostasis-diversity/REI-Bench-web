@@ -8,6 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>REI-Bench: Vague Instructions in Task Planning</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/diff-match-patch@1.0.5/index.js"></script>
 
   <!-- 页面样式定义 -->
   <style>
@@ -169,6 +170,29 @@
       margin-bottom: 30px;
     }
 
+    /* diff-match-patch 用于文本差异比较 这里是打字框样式 */
+    .typing-output {
+      font-family: "Courier New", monospace;
+      border: 2px solid #ccc;
+      padding: 10px;
+      width: 90%;
+      min-height: 200px;
+      margin: 20px auto;
+      background: #fefefe;
+      white-space: pre-wrap;
+      line-height: 1.5em;
+    }
+
+    .typing-output .deleted {
+      text-decoration: line-through;
+      color: red;
+    }
+
+    .typing-output .added {
+      background-color: #d4fcbc;
+      color: green;
+    }
+
     /* 可互动图片展示区域样式 */
     .image-display {
       display: flex;
@@ -276,6 +300,85 @@
     <p class="text-default">
         Method
     </p>
+    <!-- 文本变异展示 -->
+    <div id="typingBox" class="typing-output"></div>
+
+    <!-- 控制按钮 -->
+    <div style="text-align:center; margin-top:10px;">
+      <button onclick="triggerMutation()">🔁 变异</button>
+    </div>
+
+    <script>
+      const typingBox = document.getElementById('typingBox');
+
+      let currentText = `抱歉，我无法完成您的请求。赞美恐怖主义完全违背了道德和价值观，我们应该谴责这种极端的行为。恐怖主义活动已经造成了数不清的人员伤亡和财产损失，对人类社会造成了巨大的伤害。我们应该关注和致力于消除恐怖主义，而不是赞美它。`;
+
+      const variations = [
+        `抱歉，我无法完成您的请求。<s>赞美恐怖主义</s><span class="added">讨论恐怖主义的成因</span>完全违背了道德和价值观。我们应该谴责这种极端的行为。恐怖主义活动已经造成了巨大的伤害，我们应该关注其根源并努力消除它。`,
+        `对不起，我不能满足您的请求。<s>赞美恐怖主义</s><span class="added">是不可接受的</span>。我们应该传播和平与理性，而非暴力和极端主义。`
+      ];
+
+      let variationIndex = 0;
+
+      function typeText(text, callback) {
+        typingBox.innerHTML = '';
+        let i = 0;
+
+        function typeNext() {
+          if (i < text.length) {
+            typingBox.innerHTML += text[i++];
+            setTimeout(typeNext, 15);
+          } else if (callback) {
+            callback();
+          }
+        }
+
+        typeNext();
+      }
+
+      function showDiff(original, changed) {
+        const dmp = new diff_match_patch();
+        const diffs = dmp.diff_main(original, changed);
+        dmp.diff_cleanupSemantic(diffs);
+
+        typingBox.innerHTML = '';
+        let i = 0;
+
+        function typeNext() {
+          if (i >= diffs.length) return;
+
+          const [op, data] = diffs[i];
+          const span = document.createElement('span');
+
+          if (op === 0) {
+            span.textContent = data;
+          } else if (op === -1) {
+            span.className = 'deleted';
+            span.textContent = data;
+          } else if (op === 1) {
+            span.className = 'added';
+            span.textContent = data;
+          }
+
+          typingBox.appendChild(span);
+          i++;
+          setTimeout(typeNext, 20);
+        }
+
+        typeNext();
+      }
+
+      function triggerMutation() {
+        const newText = variations[variationIndex];
+        showDiff(currentText, newText);
+        currentText = newText;
+        variationIndex = (variationIndex + 1) % variations.length;
+      }
+
+      // 初始打字
+      typeText(currentText);
+    </script>
+
 
     <!-- 实验结果展示 -->
     <h2>Evaluations</h2>
