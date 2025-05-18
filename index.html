@@ -462,26 +462,44 @@
 
 
     <h3>Prompting Method</h3>
-    <table>
-      <tr>
-        <th>方法</th>
-        <th>准确率</th>
-        <th>召回率</th>
-        <th>F1分数</th>
-      </tr>
-      <tr>
-        <td>Baseline</td>
-        <td>80.2%</td>
-        <td>75.1%</td>
-        <td>77.5%</td>
-      </tr>
-      <tr>
-        <td>我的方法</td>
-        <td>89.4%</td>
-        <td>86.3%</td>
-        <td>87.8%</td>
-      </tr>
-    </table>
+    <!-- 主展示区 -->
+    <div class="image-display" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+        <div>
+            <img id="imgPrompting" src="media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" alt="llama_saycan" width="100">
+            <p id="labelPrompting" style="text-align: center;">LLaMA3.1-8B + SayCan</p>
+            <input type="range" id="sliderPrompting" min="0" max="11" value="0" style="width: 100px;">
+        </div>
+    </div>
+
+    <script>
+        const prompting_imageList = [
+            { name: "LLaMA3.1-8B + SayCan", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" },
+            { name: "GPT-4o-mini + SayCan", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" },
+            { name: "DeepSeekMath-7B + SayCan", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__SayCan.jpg" },
+            { name: "Gemma2-9B + SayCan", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__SayCan.jpg" },
+            { name: "Ministral-8B + SayCan", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__SayCan.jpg" },
+            { name: "Qwen2.5-7B + SayCan", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__SayCan.jpg" },
+            { name: "LLaMA3.1-8B + LLM+P", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__LLM+P.jpg" },
+            { name: "GPT-4o-mini + LLM+P", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__LLM+P.jpg" },
+            { name: "DeepSeekMath-7B + LLM+P", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__LLM+P.jpg" },
+            { name: "Gemma2-9B + LLM+P", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__LLM+P.jpg" },
+            { name: "Ministral-8B + LLM+P", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__LLM+P.jpg" },
+            { name: "Qwen2.5-7B + LLM+P", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__LLM+P.jpg" },
+        ];
+
+        const prompting_sliderPrompting = document.getElementById("sliderPrompting");
+        const prompting_imgPrompting = document.getElementById("imgPrompting");
+        const prompting_labelPrompting = document.getElementById("labelPrompting");
+
+        function updateImages() {
+            const indexPrompting = parseInt(sliderPrompting.value);
+            imgPrompting.src = imageList[indexPrompting].path;
+            labelPrompting.textContent = imageList[indexPrompting].name;
+        }
+
+        sliderPrompting.addEventListener("input", updateImages);
+    </script>
+
 
     <!-- 相关研究 -->
     <h2>Related Works</h2>
