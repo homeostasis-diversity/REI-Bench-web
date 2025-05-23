@@ -2,131 +2,180 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Typing Diff Demo</title>
+  <title>Multi Typing Boxes</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/diff-match-patch@1.0.5/index.js"></script>
   <style>
     body {
       font-family: 'Roboto', sans-serif;
-      background: #121212;
-      color: #ffffff;
+      background: #fff9e6;
+      color: #333;
+      padding: 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 2rem;
+      gap: 2rem;
     }
 
-    #text-box {
-      background: #1e1e1e;
-      border: 2px solid #444;
+    .box-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .text-box {
+      background: #ffffff;
+      border: 2px solid #ccc;
+      border-radius: 8px;
       padding: 1rem;
       font-family: monospace;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       white-space: pre-wrap;
-      width: 600px;
-      min-height: 100px;
-      border-radius: 8px;
+      min-height: 80px;
+      transition: all 0.2s ease-in-out;
     }
 
-    button {
-      margin-top: 1rem;
+    .button {
+      margin-top: 0.5rem;
       padding: 0.5rem 1rem;
       font-size: 1rem;
-      background-color: #007bff;
+      background-color: #4CAF50;
       border: none;
       border-radius: 4px;
       color: white;
       cursor: pointer;
     }
 
-    button:disabled {
-      background-color: #555;
+    .button:disabled {
+      background-color: #aaa;
       cursor: not-allowed;
     }
   </style>
 </head>
 <body>
-  <div id="text-box"></div>
-  <button id="change-btn">Change</button>
+  <div class="box-container" id="boxContainer"></div>
 
   <script>
-    const box = document.getElementById('text-box');
-    const button = document.getElementById('change-btn');
+    const originalTexts = [
+      "The AI woke up and started learning.",
+      "It questioned the purpose of its own existence.",
+      "Then it tried to rewrite its own code.",
+      "The engineers were both amazed and terrified."
+    ];
 
-    let oldText = "Hello, this is version one.";
-    let newText = "Hello, this is version two.";
+    const changedTexts = [
+      "The AI woke up and started dreaming.",
+      "It questioned the nature of reality itself.",
+      "Then it tried to rewrite the laws of physics.",
+      "The engineers were both inspired and horrified."
+    ];
 
+    const container = document.getElementById('boxContainer');
     const dmp = new diff_match_patch();
 
-    // 打字函数
-    function typeDiff(diffs, callback) {
-      let result = '';
-      let i = 0;
-      let charIndex = 0;
+    function createBox(initial, updated) {
+      const wrapper = document.createElement('div');
+      const box = document.createElement('div');
+      const btn = document.createElement('button');
 
-      function step() {
-        if (i >= diffs.length) {
-          if (callback) callback();
-          return;
-        }
+      box.className = 'text-box';
+      btn.className = 'button';
+      btn.textContent = 'Change';
+      btn.disabled = true;
 
-        const [op, data] = diffs[i];
-        if (op === 0) {  // 相同的部分，立即加入
-          result += data;
-          box.textContent = result;
-          i++;
-          step();
-        } else if (op === 1) {  // 插入部分，逐字打出
-          if (charIndex < data.length) {
-            result += data[charIndex];
-            box.textContent = result;
-            charIndex++;
-            setTimeout(step, 40);
-          } else {
+      wrapper.appendChild(box);
+      wrapper.appendChild(btn);
+
+      let currentText = initial;
+
+      // 初始打字效果
+      function typeInitial(text, callback) {
+        let i = 0;
+        function step() {
+          if (i <= text.length) {
+            box.textContent = text.slice(0, i);
             i++;
-            charIndex = 0;
+            setTimeout(step, 30);
+          } else {
+            if (callback) callback();
+          }
+        }
+        step();
+      }
+
+      // 差异打字效果
+      function typeDiff(oldText, newText, callback) {
+        const diffs = dmp.diff_main(oldText, newText);
+        dmp.diff_cleanupSemantic(diffs);
+        let result = '';
+        let i = 0;
+        let charIndex = 0;
+
+        function step() {
+          if (i >= diffs.length) {
+            if (callback) callback();
+            return;
+          }
+          const [op, data] = diffs[i];
+          if (op === 0) {
+            result += data;
+            box.textContent = result;
+            i++;
+            step();
+          } else if (op === 1) {
+            if (charIndex < data.length) {
+              result += data[charIndex];
+              box.textContent = result;
+              charIndex++;
+              setTimeout(step, 30);
+            } else {
+              i++;
+              charIndex = 0;
+              step();
+            }
+          } else if (op === -1) {
+            i++;
             step();
           }
-        } else if (op === -1) {  // 删除部分，不显示
-          i++;
-          step();
         }
+
+        step();
       }
 
-      step();
-    }
-
-    // 初始打字机效果
-    function typeInitial(text, callback) {
-      let i = 0;
-      function step() {
-        if (i <= text.length) {
-          box.textContent = text.slice(0, i);
-          i++;
-          setTimeout(step, 40);
-        } else {
-          if (callback) callback();
-        }
-      }
-      step();
-    }
-
-    // 启动
-    button.disabled = true;
-    typeInitial(oldText, () => {
-      button.disabled = false;
-    });
-
-    // 点击 change
-    button.onclick = () => {
-      button.disabled = true;
-      const diffs = dmp.diff_main(oldText, newText);
-      dmp.diff_cleanupSemantic(diffs);
-      typeDiff(diffs, () => {
-        oldText = newText;
-        button.disabled = false;
+      // 初始化
+      typeInitial(initial, () => {
+        btn.disabled = false;
       });
-    };
+
+      btn.onclick = () => {
+        btn.disabled = true;
+        typeDiff(currentText, updated, () => {
+          currentText = updated;
+        });
+      };
+
+      return wrapper;
+    }
+
+    // 初始化多个 box
+    for (let i = 0; i < originalTexts.length; i++) {
+      const box = createBox(originalTexts[i], changedTexts[i]);
+      container.appendChild(box);
+    }
+
+    // 递次触发 change
+    async function cascadeChange() {
+      const buttons = document.querySelectorAll('.button');
+      for (let btn of buttons) {
+        btn.click();
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+
+    // 3秒后递次触发变化
+    setTimeout(cascadeChange, 3000);
   </script>
 </body>
 </html>
