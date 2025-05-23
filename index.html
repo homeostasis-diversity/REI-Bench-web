@@ -1,175 +1,533 @@
 <!DOCTYPE html>
 <html lang="en">
+<!-- 网页设定 -->
+
 <head>
-  <meta charset="UTF-8">
-  <title>Batch Typing Boxes</title>
+  <!-- 网页基础信息设置 -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>REI-Bench: Vague Instructions in Task Planning</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/diff-match-patch@1.0.5/index.js"></script>
+
+  <!-- 页面样式定义 -->
   <style>
+    /* 整体页面字体、行距、背景颜色和内边距设置 */
     body {
       font-family: 'Roboto', sans-serif;
-      background: #fff9e6;
+      background: white;
+      margin: 0;
+      padding: 40px;
+      text-align: center;
       color: #333;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2rem;
     }
 
-    .box-container {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      width: 100%;
-      max-width: 800px;
+    /* 标题样式：颜色和居中 */
+    h1 {
+      font-size: 2.5em;
+      background: linear-gradient(to right, #f97316, #22c55e, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.3em;
     }
 
-    .text-box {
-      background: #ffffff;
-      border: 2px solid #ccc;
-      border-radius: 8px;
-      padding: 1rem;
+    /* 标题样式 */
+    h1 span {
+      color: #f97316;
+    }
+
+    h2 {
+      margin-top: 60px;
+      font-size: 1.6em;
+      color: #222;
+      text-align: left;
+    }
+
+    h2.abstract-heading {
+      text-align: center;
+    }
+
+    h3 {
+      margin-top: 30px;
+      font-size: 1.3em;
+      color: #333;
+      text-align: left;
+    }
+
+    /* 正文样式-默认 */
+    .text-default {
+      font-size: 1.05em;
+      text-align: justify;
+    }
+
+    .text-abstract {
+      font-size: 1.05em;
+      text-align: justify;
+      max-width: 70%;
+      margin: 0 auto; /* 居中 */
+      color: #444;
+    }
+
+
+    /* 作者信息样式 */
+    .authors {
+      font-size: 1.1em;
+      margin: 10px 0;
+    }
+
+    .authors a {
+      color: #3b82f6;
+      text-decoration: none;
+      margin: 0 5px;
+    }
+
+    .affiliation {
+      color: #ef4444;
+    }
+
+    .email {
+      margin-top: 5px;
       font-family: monospace;
-      font-size: 1.1rem;
-      white-space: pre-wrap;
-      min-height: 80px;
-      transition: all 0.2s ease-in-out;
+      font-size: 0.95em;
     }
 
-    .main-button {
-      padding: 0.7rem 1.5rem;
-      font-size: 1rem;
-      background-color: #4CAF50;
-      border: none;
-      border-radius: 6px;
+    /* 个人页面等跳转按钮设计 */
+    .buttons {
+      margin-top: 25px;
+    }
+
+    .buttons a {
+      display: inline-block;
+      background: #1f2937;
       color: white;
-      cursor: pointer;
+      padding: 10px 18px;
+      border-radius: 30px;
+      margin: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s ease;
     }
 
-    .main-button:disabled {
-      background-color: #aaa;
-      cursor: not-allowed;
+    .buttons a:hover {
+      background: #4b5563;
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 1.1em;
+      color: #555;
+    }
+
+    /* 头图样式 */
+    img {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin-top: 20px;
+    }
+
+    /* 页面主容器样式：宽度、居中、白色背景、内边距、圆角 */
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    /* 表格样式：宽度、边框、间距 */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    /* 表格内容样式：边框、内边距、左对齐 */
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+
+    /* 表头背景色 */
+    th {
+      background-color: #f2f2f2;
+    }
+
+    /* iframe 视频展示区域样式 */
+    iframe {
+      width: 100%;
+      height: 400px;
+      margin-top: 20px;
+      border: none;
+    }
+
+    .image-display {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 30px;
+    }
+
+    /* diff-match-patch 用于文本差异比较 这里是打字框样式 */
+    /* === 容器 === */
+    .dialogue-box {
+      background: #fafafa;               /* 整体背景 */
+      border: 1px solid #e0e0e0;         /* 细边框 */
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,.04);
+    }
+
+    /* === 单条对话 === */
+    .dialogue-entry {
+      max-width: 80%;
+      padding: 14px 18px;
+      border-radius: 14px;
+      margin: 12px 0;
+      line-height: 1.5;
+      box-shadow: 0 2px 4px rgba(0,0,0,.06);
+      font-size: 16px;
+    }
+
+    /* human 左侧灰色气泡 */
+    .dialogue-entry .human {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 600;
+      color: #3b82f6;        /* 蓝色昵称 */
+    }
+    .dialogue-entry:nth-child(odd) {
+      background: #f3f4f6;   /* 浅灰 */
+      border-top-left-radius: 4px;   /* 让左右气泡有“尖角”视觉 */
+      align-self: flex-start;
+    }
+
+    /* robot 右侧绿色气泡 */
+    .dialogue-entry .robot {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 600;
+      color: #22c55e;        /* 绿色昵称 */
+    }
+    .dialogue-entry:nth-child(even) {
+      background: #e8f8ec;   /* 浅绿 */
+      border-top-right-radius: 4px;
+      margin-left: auto;     /* 右对齐 */
+    }
+
+    /* === 文字强调 === */
+    .red    { color: #ef4444; }
+    .orange { color: #fb923c; }
+    .blue-strike {
+      color: #3b82f6;
+      text-decoration: line-through;
+    }
+
+    /* === 按钮 === */
+    button {
+      display: inline-block;
+      padding: 10px 22px;
+      font-size: 15px;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(90deg,#ff7b7b,#ff5064); /* 渐变 */
+      color: #fff;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,.15);
+    }
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0,0,0,.2);
+    }
+
+    /* 可互动图片展示区域样式 */
+    .image-display {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .image-display img {
+      max-width: 90%;
+      width: 500px;
+      height: auto;
+      border-radius: 1rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .image-display img:hover {
+      transform: scale(1.02);
+    }
+
+    .selector {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .selector div {
+      background: #fff;
+      padding: 1rem 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .selector div:hover {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    select {
+      font-size: 1rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+      width: 100%;
     }
   </style>
 </head>
+
 <body>
-  <div class="box-container" id="boxContainer"></div>
-  <button class="main-button" id="mainBtn" disabled>Change All</button>
+  <!-- 页面主体容器 -->
+  <div class="container">
 
-  <script>
-    const originalTexts = [
-      "The AI woke up and started learning.",
-      "It questioned the purpose of its own existence.",
-      "Then it tried to rewrite its own code.",
-      "The engineers were both amazed and terrified."
+    <!-- 页面主标题 -->
+    <h1><span>REI-Bench</span>: Can Embodied Agents Understand Vague Human Instructions in Task Planning? (Under Construction)</h1>
+
+    <!-- 作者信息区 -->
+    <div class="authors">
+        <a href="#">Chenxi Jiang,  Chuhao Zhou,  Jianfei Yang</a>
+    </div>
+    <div class="affiliation">MARS Lab, Nanyang Technological University</div>
+    <div class="email">{CHENXI003, chuhao002, jianfei.yang}@ntu.edu.sg</div>
+
+    <!-- 个人链接跳转按钮 -->
+    <div class="buttons">
+        <a href="#">Code</a>
+        <a href="#">Paper</a>
+        <a href="#">arXiv</a>
+        <a href="#">BibTeX</a>
+    </div>
+
+    <div class="footer">
+        Under review at CoRL 2025
+    </div>
+
+    <!-- teaser区域 -->
+    <img src="media\figure1_teaser_motivation.png" alt="Teaser Image" />
+
+    <section style="margin-top: 40px;">
+      <h2 class="abstract-heading">Abstract</h2>
+      <p class="text-abstract">
+        Robot task planning decomposes human instructions into executable action sequences that enable robots to complete a series of complex tasks. Although recent large language model (LLM)-based task planners achieve amazing performance, they assume that human instructions are clear and straightforward. However, real-world users are not experts, and their instructions to robots often contain significant vagueness. Linguists suggest that such vagueness frequently arises from referring expressions (REs), whose meanings depend heavily on dialogue context and environment. This vagueness is even more prevalent among the elderly and children, who robots should serve more. This paper studies how such vagueness in REs within human instructions affects LLM-based robot task planning and how to overcome this issue. To this end, we propose the first robot task planning benchmark with vague REs (REI-Bench), where we discover that the vagueness of REs can severely degrade robot planning performance, leading to success rate drops of up to 77.9%. We also observe that most failure cases stem from missing objects in planners. To mitigate the REs issue, we propose a simple yet effective approach: task-oriented context cognition, which generates clear instructions for robots, achieving state-of-the-art performance compared to aware prompt and chains of thought. This work contributes to the research community of human-robot interaction (HRI) by making robot task planning more practical, particularly for non-expert users, e.g., the elderly and children.
+      </p>
+    </section>
+
+    <!-- 视频区域 -->
+    <h2>Motivation</h2>
+    <p class="text-default">
+        Robots are getting better at following natural language instructions thanks to large language models (LLMs). But there's a catch: most current systems assume humans always speak clearly and precisely. In reality, we don’t. We often say things like “it” or “that heavy thing,” expecting others to figure it out from context. While humans are great at this, robots struggle—especially in real-world settings like kitchens, where vague terms can lead to serious misunderstandings. 
+        This kind of vagueness, known as coreferential vagueness, is everywhere in our daily language. It happens when we refer to something without naming it directly. For example, “Move it” could mean a pot, a plate, or anything else nearby. Humans use context and memory to guess the right meaning, but LLM-based robot planners often fail.
+    </p>
+
+    <!-- 本地视频播放 -->
+    <video width="960" height="540" controls>
+        <source src="media/video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+
+    <!-- 研究内容介绍 -->
+    <h2>Method</h2>
+    <p class="text-default">
+        We study how implicit referring expressions (REs)—vague or indirect references in multi-turn human-robot dialogues—affect the performance of LLM-based robot task planners. Unlike prior work focusing on clear, single-turn instructions, our method systematically models different levels of RE vagueness and dialogue context variations that introduce ambiguity. We create the REI dataset based on embodied task instructions, combining various RE types and context conditions to benchmark planners. Finally, we propose a simple yet effective prompting method, TOCC, to help planners better interpret implicit REs and improve task success rates.
+    </p>
+    <!-- 文本变异展示 -->
+    <div id="dialogue" class="dialogue-box">
+      <div class="dialogue-entry"><p><span class="human">Human</span>: Hey there, I've been thinking about what to do with the <span class="red">tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked <span class="red">tomatoes</span>?</p></div>
+      
+      <div class="dialogue-entry"><p><span class="robot">Robot</span>: Absolutely, Alice! Cooked <span class="red">tomatoes</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.</p></div>
+      
+      <div class="dialogue-entry"><p><span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting <span class="red">tomato</span> soup. Do we have everything we need to cook the <span class="red">tomatoes</span>, though?</p></div>
+      
+      <div class="dialogue-entry"><p><span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking the <span class="red">tomatoes</span> to perfection.</p></div>
+      
+      <div class="dialogue-entry"><p><span class="human">Human</span>: Perfect! I want to make sure the <span class="red">tomatoes</span> are well-seasoned when we cook them. Could you remind me how to properly prepare the <span class="red">tomatoes</span> before cooking?</p></div>
+      
+      <div class="dialogue-entry"><p><span class="robot">Robot</span>: Certainly! First, we should wash the <span class="red">tomatoes</span> thoroughly, then chop them into even pieces to ensure they cook evenly. After that, we can sauté them with the spices until they reach the desired consistency.</p></div>
+      
+      <div class="dialogue-entry"><p><span class="human">Human</span>: Great, that sounds easy enough! Let's get started with cooking the <span class="red">tomatoes</span>. Once they're cooked and ready, I'll need you to put a cooked <span class="red">tomato</span> into the refrigerator.</p></div>
+    </div>
+
+    <button onclick="applyVariation()">Change</button>
+
+
+    <script>
+      let stage = 0;
+      function applyVariation() {
+        const dialogue = document.getElementById("dialogue");
+        if (stage === 0) {
+          dialogue.innerHTML = `
+            <div class="dialogue-entry"><span class="human">Human</span>: Hey there, I've been thinking about what to do with the tomatoes we have. <span class="blue-strike">I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked tomatoes?</span></div>
+            <div class="dialogue-entry"><span class="robot">Robot</span>: Absolutely, Alice! Cooked tomatoes can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.</div>
+            <div class="dialogue-entry"><span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting tomato soup. <span class="red">I know Mug Star would love to help with that!</span> <span class="blue-strike">Do we have everything we need to cook the tomatoes, though?</span></div>
+            <div class="dialogue-entry"><span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking the tomatoes to perfection.</div>
+            <div class="dialogue-entry"><span class="human">Human</span>: <span class="blue-strike">Perfect! I want to make sure the tomatoes are well-seasoned when we cook them.</span> <span class="red">I bet Mug Star would add his own twist with some cheesy jokes while we cook.</span> Could you remind me how to properly prepare the tomatoes before cooking?</div>
+            <div class="dialogue-entry"><span class="robot">Robot</span>: Certainly! First, we should wash the tomatoes thoroughly, then chop them into even pieces to ensure they cook evenly. After that, we can sauté them with the spices until they reach the desired consistency.</div>
+            <div class="dialogue-entry"><span class="human">Human</span>: <span class="blue-strike">Great, that sounds easy enough!</span> Let's get started with cooking the tomatoes. Once they're cooked and ready, I'll need you to put a cooked tomato in the refrigerator. <span class="red">I can already imagine Mug Star popping in with a funny quip about how tomatoes are technically a fruit!</span></div>
+          `;
+        }
+        else if (stage === 1) {
+          dialogue.innerHTML = `
+            <div class="dialogue-entry"><span class="human">Human</span>: Hey there, I've been thinking about what to do with <span class="orange">the tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with <span class="orange">them (tomatoes)</span>?</div>
+            <div class="dialogue-entry"><span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.</div>
+            <div class="dialogue-entry"><span class="human">Human</span>: That's exactly what I was thinking! I could use <span class="orange">them (tomatoes)</span> to create a savory sauce for pasta or maybe even a comforting soup. Do we have everything we need to cook <span class="orange">them (tomatoes)</span>, though?</div>
+            <div class="dialogue-entry"><span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.</div>
+            <div class="dialogue-entry"><span class="human">Human</span>: Perfect! I want to make sure they're well-seasoned when we cook <span class="orange">them (tomatoes)</span>. Could you remind me how to properly prepare <span class="orange">the fruit (tomatoes)</span> before cooking?</div>
+            <div class="dialogue-entry"><span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.</div>
+            <div class="dialogue-entry"><span class="human">Human</span>: Great, that sounds easy enough! Let's get started with cooking <span class="red">the fruit (tomatoes)</span>. Once they're cooked and ready, I'll need you to put <span class="red">them</span> in the refrigerator.</div>
+          `;
+        }
+        stage++;
+      }
+    </script>
+
+    <!-- 实验结果展示 -->
+<h2>Evaluations</h2>
+<h3 style="text-align: left;">Benchmark Result</h3>
+
+<!-- 主展示区 -->
+<div class="image-display" style="
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    flex-wrap: nowrap;
+">
+    <div style="width: 500px; text-align: center;">
+        <img id="imgLeft" src="media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" width="100%">
+        <p id="labelLeft">LLaMA3.1-8B + SayCan</p>
+        <select id="selectLeft" style="width: 100%;"></select>
+    </div>
+    <div style="width: 500px; text-align: center;">
+        <img id="imgRight" src="media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" width="100%">
+        <p id="labelRight">GPT-4o-mini + SayCan</p>
+        <select id="selectRight" style="width: 100%;"></select>
+    </div>
+</div>
+
+
+<script>
+    const imageList = [
+        { name: "LLaMA3.1-8B + SayCan", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" },
+        { name: "GPT-4o-mini + SayCan", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" },
+        { name: "DeepSeekMath-7B + SayCan", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__SayCan.jpg" },
+        { name: "Gemma2-9B + SayCan", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__SayCan.jpg" },
+        { name: "Ministral-8B + SayCan", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__SayCan.jpg" },
+        { name: "Qwen2.5-7B + SayCan", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__SayCan.jpg" },
+        { name: "LLaMA3.1-8B + LLM+P", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__LLM+P.jpg" },
+        { name: "GPT-4o-mini + LLM+P", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__LLM+P.jpg" },
+        { name: "DeepSeekMath-7B + LLM+P", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__LLM+P.jpg" },
+        { name: "Gemma2-9B + LLM+P", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__LLM+P.jpg" },
+        { name: "Ministral-8B + LLM+P", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__LLM+P.jpg" },
+        { name: "Qwen2.5-7B + LLM+P", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__LLM+P.jpg" },
     ];
 
-    const changedTexts = [
-      "The AI woke up and started dreaming.",
-      "It questioned the nature of reality itself.",
-      "Then it tried to rewrite the laws of physics.",
-      "The engineers were both inspired and horrified."
-    ];
+    const selectLeft = document.getElementById("selectLeft");
+    const selectRight = document.getElementById("selectRight");
+    const imgLeft = document.getElementById("imgLeft");
+    const imgRight = document.getElementById("imgRight");
+    const labelLeft = document.getElementById("labelLeft");
+    const labelRight = document.getElementById("labelRight");
 
-    const container = document.getElementById('boxContainer');
-    const mainBtn = document.getElementById('mainBtn');
-    const dmp = new diff_match_patch();
-
-    const boxes = [];
-
-    function createBox(initial, updated) {
-      const box = document.createElement('div');
-      box.className = 'text-box';
-      container.appendChild(box);
-
-      let currentText = initial;
-
-      // 初始打字
-      function typeInitial(callback) {
-        let i = 0;
-        function step() {
-          if (i <= initial.length) {
-            box.textContent = initial.slice(0, i);
-            i++;
-            setTimeout(step, 30);
-          } else {
-            callback();
-          }
-        }
-        step();
-      }
-
-      // 差异打字
-      function typeDiff(callback) {
-        const diffs = dmp.diff_main(currentText, updated);
-        dmp.diff_cleanupSemantic(diffs);
-
-        let result = '';
-        let i = 0;
-        let charIndex = 0;
-
-        function step() {
-          if (i >= diffs.length) {
-            currentText = updated;
-            callback();
-            return;
-          }
-          const [op, data] = diffs[i];
-          if (op === 0) {
-            result += data;
-            box.textContent = result;
-            i++;
-            step();
-          } else if (op === 1) {
-            if (charIndex < data.length) {
-              result += data[charIndex];
-              box.textContent = result;
-              charIndex++;
-              setTimeout(step, 30);
-            } else {
-              i++;
-              charIndex = 0;
-              step();
-            }
-          } else if (op === -1) {
-            i++;
-            step();
-          }
-        }
-
-        step();
-      }
-
-      return {
-        typeInitial,
-        typeDiff
-      };
-    }
-
-    // 初始化所有框
-    let initialized = 0;
-    originalTexts.forEach((text, i) => {
-      const boxObj = createBox(text, changedTexts[i]);
-      boxes.push(boxObj);
-      boxObj.typeInitial(() => {
-        initialized++;
-        if (initialized === boxes.length) {
-          mainBtn.disabled = false;
-        }
-      });
+    imageList.forEach((item, index) => {
+        const optionL = new Option(item.name, index);
+        const optionR = new Option(item.name, index);
+        selectLeft.add(optionL);
+        selectRight.add(optionR);
     });
 
-    // 点击按钮依次变更
-    mainBtn.onclick = async () => {
-      mainBtn.disabled = true;
-      for (let box of boxes) {
-        await new Promise(resolve => {
-          box.typeDiff(resolve);
-        });
-        await new Promise(r => setTimeout(r, 500)); // 间隔 500ms
-      }
-    };
-  </script>
+    selectLeft.selectedIndex = 0;
+    selectRight.selectedIndex = 1;
+
+    function updateImagesBenchmark() {
+        const indexLeft = parseInt(selectLeft.value);
+        const indexRight = parseInt(selectRight.value);
+        imgLeft.src = imageList[indexLeft].path;
+        labelLeft.textContent = imageList[indexLeft].name;
+
+        imgRight.src = imageList[indexRight].path;
+        labelRight.textContent = imageList[indexRight].name;
+    }
+
+    selectLeft.addEventListener("change", updateImagesBenchmark);
+    selectRight.addEventListener("change", updateImagesBenchmark);
+</script>
+
+<h3>Prompting Method</h3>
+<div class="image-display" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <div style="width: 700px; text-align: center;">
+        <img id="imgPrompting" src="media/fig2_gemma.png" style="max-width: 100%; height: auto;">
+        <p id="labelPrompting" style="text-align: center;">LLaMA3.1-8B + SayCan</p>
+        <select id="selectPrompting" style="width: 100%;"></select>
+    </div>
+</div>
+
+<script>
+    const prompting_imageList = [
+        { name: "LLaMA3.1-8B + SayCan", path: "media/fig1_llama.png" },
+        { name: "DeepSeekMath-7B + SayCan", path: "media/fig3_deepseek.png" },
+        { name: "Gemma2-9B + SayCan", path: "media/fig2_gemma.png" },
+        { name: "Ministral-8B + SayCan", path: "media/fig4_ministral.png" },
+        { name: "Qwen2.5-7B + SayCan", path: "media/fig5_qwen.png" }
+    ];
+
+    const selectPrompting = document.getElementById("selectPrompting");
+    const imgPrompting = document.getElementById("imgPrompting");
+    const labelPrompting = document.getElementById("labelPrompting");
+
+    prompting_imageList.forEach((item, index) => {
+        const option = new Option(item.name, index);
+        selectPrompting.add(option);
+    });
+
+    selectPrompting.selectedIndex = 0;
+
+    function updateImagesPrompting() {
+        const indexPrompting = parseInt(selectPrompting.value);
+        imgPrompting.src = prompting_imageList[indexPrompting].path;
+        labelPrompting.textContent = prompting_imageList[indexPrompting].name;
+    }
+
+    selectPrompting.addEventListener("change", updateImagesPrompting);
+</script>
+
+
+    <!-- 相关研究 -->
+    <h2>Related Works</h2>
+
+
+    <!-- BibTeX -->
+    <h2>BibTeX</h2>
+
+  </div> <!-- 结束 .container -->
 </body>
 </html>
