@@ -415,16 +415,22 @@
 <h3 style="text-align: left;">Benchmark Result</h3>
 
 <!-- 主展示区 -->
-<div class="image-display" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-    <div>
-        <img id="imgLeft" src="media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" alt="llama_saycan" width="100">
-        <p id="labelLeft" style="text-align: center;">LLaMA3.1-8B + SayCan</p>
-        <select id="selectLeft" style="width: 200px;"></select>
+<div class="image-display" style="
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    flex-wrap: nowrap;
+">
+    <div style="width: 300px; text-align: center;">
+        <img id="imgLeft" src="media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" width="100%">
+        <p id="labelLeft">LLaMA3.1-8B + SayCan</p>
+        <select id="selectLeft" style="width: 100%;"></select>
     </div>
-    <div>
-        <img id="imgRight" src="media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" alt="gpt_saycan" width="100">
-        <p id="labelRight" style="text-align: center;">GPT-4o-mini + SayCan</p>
-        <select id="selectRight" style="width: 200px;"></select>
+    <div style="width: 300px; text-align: center;">
+        <img id="imgRight" src="media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" width="100%">
+        <p id="labelRight">GPT-4o-mini + SayCan</p>
+        <select id="selectRight" style="width: 100%;"></select>
     </div>
 </div>
 
