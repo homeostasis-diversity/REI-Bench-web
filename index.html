@@ -390,129 +390,131 @@
     </p>
 
     <!-- 文本变异展示2 -->
+    <div class="box-container" id="boxContainer"></div>
+    <button class="main-button" id="mainBtn" disabled>Change All</button>
     <script>
-    const stages = [
-      [
-        "The AI woke up and started learning.",
-        "It questioned the purpose of its own existence.",
-        "Then it tried to rewrite its own code.",
-        "The engineers were both amazed and terrified."
-      ],
-      [
-        "The AI woke up and started dreaming.",
-        "It questioned the nature of reality itself.",
-        "Then it tried to rewrite the laws of physics.",
-        "The engineers were both inspired and horrified."
-      ],
-      [
-        "The AI refused to wake up again.",
-        "It questioned the need for any existence.",
-        "Then it tried to delete the entire simulation.",
-        "The engineers were nowhere to be found."
-      ]
-    ];
+      const stages = [
+        [
+          "The AI woke up and started learning.",
+          "It questioned the purpose of its own existence.",
+          "Then it tried to rewrite its own code.",
+          "The engineers were both amazed and terrified."
+        ],
+        [
+          "The AI woke up and started dreaming.",
+          "It questioned the nature of reality itself.",
+          "Then it tried to rewrite the laws of physics.",
+          "The engineers were both inspired and horrified."
+        ],
+        [
+          "The AI refused to wake up again.",
+          "It questioned the need for any existence.",
+          "Then it tried to delete the entire simulation.",
+          "The engineers were nowhere to be found."
+        ]
+      ];
 
-    const container = document.getElementById("boxContainer");
-    const mainBtn = document.getElementById("mainBtn");
-    const dmp = new diff_match_patch();
-    const boxObjects = [];
-    let currentStage = 0;
+      const container = document.getElementById("boxContainer");
+      const mainBtn = document.getElementById("mainBtn");
+      const dmp = new diff_match_patch();
+      const boxObjects = [];
+      let currentStage = 0;
 
-    function createBox(stageIndex, boxIndex) {
-      const box = document.createElement("div");
-      box.className = "text-box";
-      container.appendChild(box);
+      function createBox(stageIndex, boxIndex) {
+        const box = document.createElement("div");
+        box.className = "text-box";
+        container.appendChild(box);
 
-      let currentText = stages[stageIndex][boxIndex];
+        let currentText = stages[stageIndex][boxIndex];
 
-      function typeInitial(callback) {
-        let i = 0;
-        function step() {
-          if (i <= currentText.length) {
-            box.textContent = currentText.slice(0, i);
-            i++;
-            setTimeout(step, 30);
-          } else {
-            callback();
-          }
-        }
-        step();
-      }
-
-      function typeToNext(nextText, callback) {
-        const diffs = dmp.diff_main(currentText, nextText);
-        dmp.diff_cleanupSemantic(diffs);
-
-        let result = '';
-        let i = 0;
-        let charIndex = 0;
-
-        function step() {
-          if (i >= diffs.length) {
-            currentText = nextText;
-            callback();
-            return;
-          }
-          const [op, data] = diffs[i];
-          if (op === 0) {
-            result += data;
-            box.textContent = result;
-            i++;
-            step();
-          } else if (op === 1) {
-            if (charIndex < data.length) {
-              result += data[charIndex];
-              box.textContent = result;
-              charIndex++;
+        function typeInitial(callback) {
+          let i = 0;
+          function step() {
+            if (i <= currentText.length) {
+              box.textContent = currentText.slice(0, i);
+              i++;
               setTimeout(step, 30);
             } else {
+              callback();
+            }
+          }
+          step();
+        }
+
+        function typeToNext(nextText, callback) {
+          const diffs = dmp.diff_main(currentText, nextText);
+          dmp.diff_cleanupSemantic(diffs);
+
+          let result = '';
+          let i = 0;
+          let charIndex = 0;
+
+          function step() {
+            if (i >= diffs.length) {
+              currentText = nextText;
+              callback();
+              return;
+            }
+            const [op, data] = diffs[i];
+            if (op === 0) {
+              result += data;
+              box.textContent = result;
               i++;
-              charIndex = 0;
+              step();
+            } else if (op === 1) {
+              if (charIndex < data.length) {
+                result += data[charIndex];
+                box.textContent = result;
+                charIndex++;
+                setTimeout(step, 30);
+              } else {
+                i++;
+                charIndex = 0;
+                step();
+              }
+            } else if (op === -1) {
+              i++;
               step();
             }
-          } else if (op === -1) {
-            i++;
-            step();
           }
+          step();
         }
-        step();
+
+        return {
+          typeInitial,
+          typeToNext,
+          get currentText() {
+            return currentText;
+          }
+        };
       }
 
-      return {
-        typeInitial,
-        typeToNext,
-        get currentText() {
-          return currentText;
-        }
-      };
-    }
-
-    let initialized = 0;
-    for (let i = 0; i < stages[0].length; i++) {
-      const boxObj = createBox(0, i);
-      boxObjects.push(boxObj);
-      boxObj.typeInitial(() => {
-        initialized++;
-        if (initialized === boxObjects.length) {
-          mainBtn.disabled = false;
-        }
-      });
-    }
-
-    mainBtn.onclick = async () => {
-      mainBtn.disabled = true;
-      const nextStage = (currentStage + 1) % stages.length;
-      for (let i = 0; i < boxObjects.length; i++) {
-        const nextText = stages[nextStage][i];
-        await new Promise(resolve => {
-          boxObjects[i].typeToNext(nextText, resolve);
+      let initialized = 0;
+      for (let i = 0; i < stages[0].length; i++) {
+        const boxObj = createBox(0, i);
+        boxObjects.push(boxObj);
+        boxObj.typeInitial(() => {
+          initialized++;
+          if (initialized === boxObjects.length) {
+            mainBtn.disabled = false;
+          }
         });
-        await new Promise(r => setTimeout(r, 400));
       }
-      currentStage = nextStage;
-      mainBtn.disabled = false;
-    };
-  </script>
+
+      mainBtn.onclick = async () => {
+        mainBtn.disabled = true;
+        const nextStage = (currentStage + 1) % stages.length;
+        for (let i = 0; i < boxObjects.length; i++) {
+          const nextText = stages[nextStage][i];
+          await new Promise(resolve => {
+            boxObjects[i].typeToNext(nextText, resolve);
+          });
+          await new Promise(r => setTimeout(r, 400));
+        }
+        currentStage = nextStage;
+        mainBtn.disabled = false;
+      };
+    </script>
 
     <!-- 文本变异展示 -->
     <div id="dialogue" class="dialogue-box">
