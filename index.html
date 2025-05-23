@@ -302,6 +302,34 @@
       border: 1px solid #ccc;
       width: 100%;
     }
+
+    /* 文本变异控件 */
+    .text-box {
+      background: #ffffff;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 1.1rem;
+      white-space: pre-wrap;
+      min-height: 80px;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .main-button {
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
+      background-color: #4CAF50;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .main-button:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 
@@ -360,6 +388,132 @@
     <p class="text-default">
         We study how implicit referring expressions (REs)—vague or indirect references in multi-turn human-robot dialogues—affect the performance of LLM-based robot task planners. Unlike prior work focusing on clear, single-turn instructions, our method systematically models different levels of RE vagueness and dialogue context variations that introduce ambiguity. We create the REI dataset based on embodied task instructions, combining various RE types and context conditions to benchmark planners. Finally, we propose a simple yet effective prompting method, TOCC, to help planners better interpret implicit REs and improve task success rates.
     </p>
+
+    <!-- 文本变异展示2 -->
+    <script>
+    const stages = [
+      [
+        "The AI woke up and started learning.",
+        "It questioned the purpose of its own existence.",
+        "Then it tried to rewrite its own code.",
+        "The engineers were both amazed and terrified."
+      ],
+      [
+        "The AI woke up and started dreaming.",
+        "It questioned the nature of reality itself.",
+        "Then it tried to rewrite the laws of physics.",
+        "The engineers were both inspired and horrified."
+      ],
+      [
+        "The AI refused to wake up again.",
+        "It questioned the need for any existence.",
+        "Then it tried to delete the entire simulation.",
+        "The engineers were nowhere to be found."
+      ]
+    ];
+
+    const container = document.getElementById("boxContainer");
+    const mainBtn = document.getElementById("mainBtn");
+    const dmp = new diff_match_patch();
+    const boxObjects = [];
+    let currentStage = 0;
+
+    function createBox(stageIndex, boxIndex) {
+      const box = document.createElement("div");
+      box.className = "text-box";
+      container.appendChild(box);
+
+      let currentText = stages[stageIndex][boxIndex];
+
+      function typeInitial(callback) {
+        let i = 0;
+        function step() {
+          if (i <= currentText.length) {
+            box.textContent = currentText.slice(0, i);
+            i++;
+            setTimeout(step, 30);
+          } else {
+            callback();
+          }
+        }
+        step();
+      }
+
+      function typeToNext(nextText, callback) {
+        const diffs = dmp.diff_main(currentText, nextText);
+        dmp.diff_cleanupSemantic(diffs);
+
+        let result = '';
+        let i = 0;
+        let charIndex = 0;
+
+        function step() {
+          if (i >= diffs.length) {
+            currentText = nextText;
+            callback();
+            return;
+          }
+          const [op, data] = diffs[i];
+          if (op === 0) {
+            result += data;
+            box.textContent = result;
+            i++;
+            step();
+          } else if (op === 1) {
+            if (charIndex < data.length) {
+              result += data[charIndex];
+              box.textContent = result;
+              charIndex++;
+              setTimeout(step, 30);
+            } else {
+              i++;
+              charIndex = 0;
+              step();
+            }
+          } else if (op === -1) {
+            i++;
+            step();
+          }
+        }
+        step();
+      }
+
+      return {
+        typeInitial,
+        typeToNext,
+        get currentText() {
+          return currentText;
+        }
+      };
+    }
+
+    let initialized = 0;
+    for (let i = 0; i < stages[0].length; i++) {
+      const boxObj = createBox(0, i);
+      boxObjects.push(boxObj);
+      boxObj.typeInitial(() => {
+        initialized++;
+        if (initialized === boxObjects.length) {
+          mainBtn.disabled = false;
+        }
+      });
+    }
+
+    mainBtn.onclick = async () => {
+      mainBtn.disabled = true;
+      const nextStage = (currentStage + 1) % stages.length;
+      for (let i = 0; i < boxObjects.length; i++) {
+        const nextText = stages[nextStage][i];
+        await new Promise(resolve => {
+          boxObjects[i].typeToNext(nextText, resolve);
+        });
+        await new Promise(r => setTimeout(r, 400));
+      }
+      currentStage = nextStage;
+      mainBtn.disabled = false;
+    };
+  </script>
+
     <!-- 文本变异展示 -->
     <div id="dialogue" class="dialogue-box">
       <div class="dialogue-entry"><p><span class="human">Human</span>: Hey there, I've been thinking about what to do with the <span class="red">tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked <span class="red">tomatoes</span>?</p></div>
