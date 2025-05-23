@@ -405,93 +405,107 @@
     </script>
 
     <!-- 实验结果展示 -->
-    <h2>Evaluations</h2>
-    <!-- <h3 style="text-align: left;">Cases</h3> -->
-    <h3 style="text-align: left;">Benchmark Result</h3>
+<h2>Evaluations</h2>
+<h3 style="text-align: left;">Benchmark Result</h3>
 
-    <!-- 主展示区 -->
-    <div class="image-display" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-        <div>
-            <img id="imgLeft" src="media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" alt="llama_saycan" width="100">
-            <p id="labelLeft" style="text-align: center;">LLaMA3.1-8B + SayCan</p>
-            <input type="range" id="sliderLeft" min="0" max="11" value="0" style="width: 100px;">
-        </div>
-        <div>
-            <img id="imgRight" src="media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" alt="gpt_saycan" width="100">
-            <p id="labelRight" style="text-align: center;">GPT-4o-mini + SayCan</p>
-            <input type="range" id="sliderRight" min="0" max="11" value="1" style="width: 100px;">
-        </div>
+<!-- 主展示区 -->
+<div class="image-display" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <div>
+        <img id="imgLeft" src="media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" alt="llama_saycan" width="100">
+        <p id="labelLeft" style="text-align: center;">LLaMA3.1-8B + SayCan</p>
+        <select id="selectLeft" style="width: 200px;"></select>
     </div>
-
-    <script>
-        const imageList = [
-            { name: "LLaMA3.1-8B + SayCan", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" },
-            { name: "GPT-4o-mini + SayCan", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" },
-            { name: "DeepSeekMath-7B + SayCan", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__SayCan.jpg" },
-            { name: "Gemma2-9B + SayCan", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__SayCan.jpg" },
-            { name: "Ministral-8B + SayCan", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__SayCan.jpg" },
-            { name: "Qwen2.5-7B + SayCan", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__SayCan.jpg" },
-            { name: "LLaMA3.1-8B + LLM+P", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__LLM+P.jpg" },
-            { name: "GPT-4o-mini + LLM+P", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__LLM+P.jpg" },
-            { name: "DeepSeekMath-7B + LLM+P", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__LLM+P.jpg" },
-            { name: "Gemma2-9B + LLM+P", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__LLM+P.jpg" },
-            { name: "Ministral-8B + LLM+P", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__LLM+P.jpg" },
-            { name: "Qwen2.5-7B + LLM+P", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__LLM+P.jpg" },
-        ];
-
-        const sliderLeft = document.getElementById("sliderLeft");
-        const sliderRight = document.getElementById("sliderRight");
-        const imgLeft = document.getElementById("imgLeft");
-        const imgRight = document.getElementById("imgRight");
-        const labelLeft = document.getElementById("labelLeft");
-        const labelRight = document.getElementById("labelRight");
-
-        function updateImages() {
-            const indexLeft = parseInt(sliderLeft.value);
-            const indexRight = parseInt(sliderRight.value);
-            imgLeft.src = imageList[indexLeft].path;
-            labelLeft.textContent = imageList[indexLeft].name;
-
-            imgRight.src = imageList[indexRight].path;
-            labelRight.textContent = imageList[indexRight].name;
-        }
-
-        sliderLeft.addEventListener("input", updateImages);
-        sliderRight.addEventListener("input", updateImages);
-    </script>
-
-
-    <h3>Prompting Method</h3>
-    <!-- 主展示区 -->
-    <div class="image-display" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-        <div>
-            <img id="imgPrompting" src="media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" alt="llama_saycan" width="100">
-            <p id="labelPrompting" style="text-align: center;">LLaMA3.1-8B + SayCan</p>
-            <input type="range" id="sliderPrompting" min="0" max="11" value="0" style="width: 100px;">
-        </div>
+    <div>
+        <img id="imgRight" src="media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" alt="gpt_saycan" width="100">
+        <p id="labelRight" style="text-align: center;">GPT-4o-mini + SayCan</p>
+        <select id="selectRight" style="width: 200px;"></select>
     </div>
+</div>
 
-    <script>
-        const prompting_imageList = [
-          { name: "LLaMA3.1-8B + SayCan", path: "media/fig1_llama.png" },
-          { name: "DeepSeekMath-7B + SayCan", path: "media/fig3_deepseek.png" },
-          { name: "Gemma2-9B + SayCan", path: "media/fig2_gemma.png" },
-          { name: "Ministral-8B + SayCan", path: "media/fig4_ministral.png" },
-          { name: "Qwen2.5-7B + SayCan", path: "media/fig5_qwen.png" }
-        ];
+<script>
+    const imageList = [
+        { name: "LLaMA3.1-8B + SayCan", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" },
+        { name: "GPT-4o-mini + SayCan", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" },
+        { name: "DeepSeekMath-7B + SayCan", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__SayCan.jpg" },
+        { name: "Gemma2-9B + SayCan", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__SayCan.jpg" },
+        { name: "Ministral-8B + SayCan", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__SayCan.jpg" },
+        { name: "Qwen2.5-7B + SayCan", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__SayCan.jpg" },
+        { name: "LLaMA3.1-8B + LLM+P", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__LLM+P.jpg" },
+        { name: "GPT-4o-mini + LLM+P", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__LLM+P.jpg" },
+        { name: "DeepSeekMath-7B + LLM+P", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__LLM+P.jpg" },
+        { name: "Gemma2-9B + LLM+P", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__LLM+P.jpg" },
+        { name: "Ministral-8B + LLM+P", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__LLM+P.jpg" },
+        { name: "Qwen2.5-7B + LLM+P", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__LLM+P.jpg" },
+    ];
 
-        const prompting_sliderPrompting = document.getElementById("sliderPrompting");
-        const prompting_imgPrompting = document.getElementById("imgPrompting");
-        const prompting_labelPrompting = document.getElementById("labelPrompting");
+    const selectLeft = document.getElementById("selectLeft");
+    const selectRight = document.getElementById("selectRight");
+    const imgLeft = document.getElementById("imgLeft");
+    const imgRight = document.getElementById("imgRight");
+    const labelLeft = document.getElementById("labelLeft");
+    const labelRight = document.getElementById("labelRight");
 
-        function updateImages() {
-            const indexPrompting = parseInt(sliderPrompting.value);
-            imgPrompting.src = imageList[indexPrompting].path;
-            labelPrompting.textContent = imageList[indexPrompting].name;
-        }
+    imageList.forEach((item, index) => {
+        const optionL = new Option(item.name, index);
+        const optionR = new Option(item.name, index);
+        selectLeft.add(optionL);
+        selectRight.add(optionR);
+    });
 
-        sliderPrompting.addEventListener("input", updateImages);
-    </script>
+    selectLeft.selectedIndex = 0;
+    selectRight.selectedIndex = 1;
+
+    function updateImagesBenchmark() {
+        const indexLeft = parseInt(selectLeft.value);
+        const indexRight = parseInt(selectRight.value);
+        imgLeft.src = imageList[indexLeft].path;
+        labelLeft.textContent = imageList[indexLeft].name;
+
+        imgRight.src = imageList[indexRight].path;
+        labelRight.textContent = imageList[indexRight].name;
+    }
+
+    selectLeft.addEventListener("change", updateImagesBenchmark);
+    selectRight.addEventListener("change", updateImagesBenchmark);
+</script>
+
+<h3>Prompting Method</h3>
+<div class="image-display" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <div>
+        <img id="imgPrompting" src="media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" alt="llama_saycan" width="100">
+        <p id="labelPrompting" style="text-align: center;">LLaMA3.1-8B + SayCan</p>
+        <select id="selectPrompting" style="width: 200px;"></select>
+    </div>
+</div>
+
+<script>
+    const prompting_imageList = [
+        { name: "LLaMA3.1-8B + SayCan", path: "media/fig1_llama.png" },
+        { name: "DeepSeekMath-7B + SayCan", path: "media/fig3_deepseek.png" },
+        { name: "Gemma2-9B + SayCan", path: "media/fig2_gemma.png" },
+        { name: "Ministral-8B + SayCan", path: "media/fig4_ministral.png" },
+        { name: "Qwen2.5-7B + SayCan", path: "media/fig5_qwen.png" }
+    ];
+
+    const selectPrompting = document.getElementById("selectPrompting");
+    const imgPrompting = document.getElementById("imgPrompting");
+    const labelPrompting = document.getElementById("labelPrompting");
+
+    prompting_imageList.forEach((item, index) => {
+        const option = new Option(item.name, index);
+        selectPrompting.add(option);
+    });
+
+    selectPrompting.selectedIndex = 0;
+
+    function updateImagesPrompting() {
+        const indexPrompting = parseInt(selectPrompting.value);
+        imgPrompting.src = prompting_imageList[indexPrompting].path;
+        labelPrompting.textContent = prompting_imageList[indexPrompting].name;
+    }
+
+    selectPrompting.addEventListener("change", updateImagesPrompting);
+</script>
 
 
     <!-- 相关研究 -->
