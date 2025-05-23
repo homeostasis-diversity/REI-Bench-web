@@ -395,7 +395,7 @@
     <script>
       const stages = [
         [
-          "The AI woke up and started learning.",
+          `Hey there, I've been thinking about what to do with the <span class="red">tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked <span class="red">tomatoes</span>?`,
           "It questioned the purpose of its own existence.",
           "Then it tried to rewrite its own code.",
           "The engineers were both amazed and terrified."
@@ -431,7 +431,7 @@
           let i = 0;
           function step() {
             if (i <= currentText.length) {
-              box.textContent = currentText.slice(0, i);
+              box.innerHTML = currentText.slice(0, i);
               i++;
               setTimeout(step, 30);
             } else {
@@ -458,13 +458,13 @@
             const [op, data] = diffs[i];
             if (op === 0) {
               result += data;
-              box.textContent = result;
+              box.innerHTML = result;
               i++;
               step();
             } else if (op === 1) {
               if (charIndex < data.length) {
                 result += data[charIndex];
-                box.textContent = result;
+                box.innerHTML = result;
                 charIndex++;
                 setTimeout(step, 30);
               } else {
