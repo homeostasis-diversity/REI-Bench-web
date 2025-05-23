@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Multi Typing Boxes</title>
+  <title>Batch Typing Boxes</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/diff-match-patch@1.0.5/index.js"></script>
   <style>
@@ -37,18 +37,17 @@
       transition: all 0.2s ease-in-out;
     }
 
-    .button {
-      margin-top: 0.5rem;
-      padding: 0.5rem 1rem;
+    .main-button {
+      padding: 0.7rem 1.5rem;
       font-size: 1rem;
       background-color: #4CAF50;
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       color: white;
       cursor: pointer;
     }
 
-    .button:disabled {
+    .main-button:disabled {
       background-color: #aaa;
       cursor: not-allowed;
     }
@@ -56,6 +55,7 @@
 </head>
 <body>
   <div class="box-container" id="boxContainer"></div>
+  <button class="main-button" id="mainBtn" disabled>Change All</button>
 
   <script>
     const originalTexts = [
@@ -73,49 +73,46 @@
     ];
 
     const container = document.getElementById('boxContainer');
+    const mainBtn = document.getElementById('mainBtn');
     const dmp = new diff_match_patch();
 
+    const boxes = [];
+
     function createBox(initial, updated) {
-      const wrapper = document.createElement('div');
       const box = document.createElement('div');
-      const btn = document.createElement('button');
-
       box.className = 'text-box';
-      btn.className = 'button';
-      btn.textContent = 'Change';
-      btn.disabled = true;
-
-      wrapper.appendChild(box);
-      wrapper.appendChild(btn);
+      container.appendChild(box);
 
       let currentText = initial;
 
-      // 初始打字效果
-      function typeInitial(text, callback) {
+      // 初始打字
+      function typeInitial(callback) {
         let i = 0;
         function step() {
-          if (i <= text.length) {
-            box.textContent = text.slice(0, i);
+          if (i <= initial.length) {
+            box.textContent = initial.slice(0, i);
             i++;
             setTimeout(step, 30);
           } else {
-            if (callback) callback();
+            callback();
           }
         }
         step();
       }
 
-      // 差异打字效果
-      function typeDiff(oldText, newText, callback) {
-        const diffs = dmp.diff_main(oldText, newText);
+      // 差异打字
+      function typeDiff(callback) {
+        const diffs = dmp.diff_main(currentText, updated);
         dmp.diff_cleanupSemantic(diffs);
+
         let result = '';
         let i = 0;
         let charIndex = 0;
 
         function step() {
           if (i >= diffs.length) {
-            if (callback) callback();
+            currentText = updated;
+            callback();
             return;
           }
           const [op, data] = diffs[i];
@@ -144,38 +141,35 @@
         step();
       }
 
-      // 初始化
-      typeInitial(initial, () => {
-        btn.disabled = false;
-      });
-
-      btn.onclick = () => {
-        btn.disabled = true;
-        typeDiff(currentText, updated, () => {
-          currentText = updated;
-        });
+      return {
+        typeInitial,
+        typeDiff
       };
-
-      return wrapper;
     }
 
-    // 初始化多个 box
-    for (let i = 0; i < originalTexts.length; i++) {
-      const box = createBox(originalTexts[i], changedTexts[i]);
-      container.appendChild(box);
-    }
+    // 初始化所有框
+    let initialized = 0;
+    originalTexts.forEach((text, i) => {
+      const boxObj = createBox(text, changedTexts[i]);
+      boxes.push(boxObj);
+      boxObj.typeInitial(() => {
+        initialized++;
+        if (initialized === boxes.length) {
+          mainBtn.disabled = false;
+        }
+      });
+    });
 
-    // 递次触发 change
-    async function cascadeChange() {
-      const buttons = document.querySelectorAll('.button');
-      for (let btn of buttons) {
-        btn.click();
-        await new Promise(resolve => setTimeout(resolve, 1000));
+    // 点击按钮依次变更
+    mainBtn.onclick = async () => {
+      mainBtn.disabled = true;
+      for (let box of boxes) {
+        await new Promise(resolve => {
+          box.typeDiff(resolve);
+        });
+        await new Promise(r => setTimeout(r, 500)); // 间隔 500ms
       }
-    }
-
-    // 3秒后递次触发变化
-    setTimeout(cascadeChange, 3000);
+    };
   </script>
 </body>
 </html>
