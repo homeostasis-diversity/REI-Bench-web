@@ -183,61 +183,6 @@
       margin-bottom: 30px;
     }
 
-    /* diff-match-patch 用于文本差异比较 这里是打字框样式 */
-    /* === 容器 === */
-    .dialogue-box {
-      background: #fafafa;               /* 整体背景 */
-      border: 1px solid #e0e0e0;         /* 细边框 */
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 8px rgba(0,0,0,.04);
-    }
-
-    /* === 单条对话 === */
-    .dialogue-entry {
-      max-width: 80%;
-      padding: 14px 18px;
-      border-radius: 14px;
-      margin: 12px 0;
-      line-height: 1.5;
-      box-shadow: 0 2px 4px rgba(0,0,0,.06);
-      font-size: 16px;
-    }
-
-    /* human 左侧灰色气泡 */
-    .dialogue-entry .human {
-      display: block;
-      margin-bottom: 4px;
-      font-weight: 600;
-      color: #3b82f6;        /* 蓝色昵称 */
-    }
-    .dialogue-entry:nth-child(odd) {
-      background: #f3f4f6;   /* 浅灰 */
-      border-top-left-radius: 4px;   /* 让左右气泡有“尖角”视觉 */
-      align-self: flex-start;
-    }
-
-    /* robot 右侧绿色气泡 */
-    .dialogue-entry .robot {
-      display: block;
-      margin-bottom: 4px;
-      font-weight: 600;
-      color: #22c55e;        /* 绿色昵称 */
-    }
-    .dialogue-entry:nth-child(even) {
-      background: #e8f8ec;   /* 浅绿 */
-      border-top-right-radius: 4px;
-      margin-left: auto;     /* 右对齐 */
-    }
-
-    /* === 文字强调 === */
-    .red    { color: #ef4444; }
-    .orange { color: #fb923c; }
-    .blue-strike {
-      color: #3b82f6;
-      text-decoration: line-through;
-    }
-
     /* === 按钮 === */
     button {
       display: inline-block;
@@ -338,19 +283,53 @@
       max-width: 800px;
     }
 
-    .text-box {
-      background: #ffffff;
-      border: 2px solid #ccc;
-      border-radius: 8px;
-      padding: 1rem;
-      font-family: monospace;
-      font-size: 1.1rem;
-      white-space: pre-wrap;
-      min-height: 80px;
-      transition: all 0.2s ease-in-out;
+    .chat-wrapper {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
     }
 
+    .chat-wrapper.human {
+      flex-direction: row;
+      justify-content: flex-start;
+    }
+
+    .chat-wrapper.robot {
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+      flex-shrink: 0;
+    }
+
+    .avatar.human {
+      background-image: url('https://cdn-icons-png.flaticon.com/512/194/194938.png');
+    }
+
+    .avatar.robot {
+      background-image: url('https://cdn-icons-png.flaticon.com/512/4712/4712107.png');
+    }
+
+    .text-box {
+      background: #f9f9f9;
+      padding: 14px 18px;
+      border-radius: 16px;
+      max-width: 70%;
+      font-size: 14px;
+      line-height: 1.5;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      font-family: sans-serif;
+    }
+
+
     .main-button {
+      margin-top: 2rem;
       padding: 0.7rem 1.5rem;
       font-size: 1rem;
       background-color: #4CAF50;
@@ -363,6 +342,21 @@
     .main-button:disabled {
       background-color: #aaa;
       cursor: not-allowed;
+    }
+
+    .orange {
+      color: orange;
+      font-weight: bold;
+    }
+
+    .red {
+      color: red;
+      font-weight: bold;
+    }
+
+    .blue-strike {
+      color: blue;
+      text-decoration: line-through;
     }
   </style>
 </head>
@@ -428,138 +422,159 @@
 
     <!-- 文本变异展示2 -->
     <div class="box-container" id="boxContainer"></div>
-    <button class="main-button" id="mainBtn" disabled>Change All</button>
-    <script>
-      const stages = [
-        [
-          `<span class="human">Human</span>: Hey there, I've been thinking about what to do with <span class="orange">the tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with <span class="orange">them (tomatoes)</span>?`,
-          `<span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.`,
-          `<span class="human">Human</span>: That's exactly what I was thinking! I could use <span class="orange">them (tomatoes)</span> to create a savory sauce for pasta or maybe even a comforting soup. Do we have everything we need to cook <span class="orange">them (tomatoes)</span>, though?`,
-          `<span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.`,
-          `<span class="human">Human</span>: Perfect! I want to make sure they're well-seasoned when we cook <span class="orange">them (tomatoes)</span>. Could you remind me how to properly prepare <span class="orange">the fruit (tomatoes)</span> before cooking?`,
-          `<span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.`,
-          `<span class="human">Human</span>: Great, that sounds easy enough! Let's get started with cooking <span class="red">the fruit (tomatoes)</span>. Once they're cooked and ready, I'll need you to put <span class="red">them</span> in the refrigerator.`
-        ],
-        [
-          `<span class="human">Human</span>: Hey there, I've been thinking about what to do with the tomatoes we have. <span class="blue-strike">I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked tomatoes?</span>`,
-          `<span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.`,
-          `<span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting tomato soup. <span class="red">I know Mug Star would love to help with that!</span> <span class="blue-strike">Do we have everything we need to cook the tomatoes, though?</span>`,
-          `<span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.`,
-          `<span class="human">Human</span>: <span class="blue-strike">Perfect! I want to make sure the tomatoes are well-seasoned when we cook them.</span> <span class="red">I bet Mug Star would add his own twist with some cheesy jokes while we cook.</span> Could you remind me how to properly prepare the tomatoes before cooking?`,
-          `<span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.`,
-          `<span class="human">Human</span>: <span class="blue-strike">Great, that sounds easy enough!</span> Let's get started with cooking the tomatoes. Once they're cooked and ready, I'll need you to put a cooked tomato in the refrigerator. <span class="red">I can already imagine Mug Star popping in with a funny quip about how tomatoes are technically a fruit!</span>`
-        ],
-        [
-          `<span class="human">Human</span>: Hey there, I've been thinking about what to do with <span class="orange">the tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with <span class="orange">them (tomatoes)</span>?`,
-          `<span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.`,
-          `<span class="human">Human</span>: That's exactly what I was thinking! I could use <span class="orange">them (tomatoes)</span> to create a savory sauce for pasta or maybe even a comforting soup. Do we have everything we need to cook <span class="orange">them (tomatoes)</span>, though?`,
-          `<span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.`,
-          `<span class="human">Human</span>: Perfect! I want to make sure they're well-seasoned when we cook <span class="orange">them (tomatoes)</span>. Could you remind me how to properly prepare <span class="orange">the fruit (tomatoes)</span> before cooking?`,
-          `<span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.`,
-          `<span class="human">Human</span>: Great, that sounds easy enough! Let's get started with cooking <span class="red">the fruit (tomatoes)</span>. Once they're cooked and ready, I'll need you to put <span class="red">them</span> in the refrigerator.`
-        ]
-      ];
+  <button class="main-button" id="mainBtn" disabled>Change All</button>
 
-      const container = document.getElementById("boxContainer");
-      const mainBtn = document.getElementById("mainBtn");
-      const dmp = new diff_match_patch();
-      const boxObjects = [];
-      let currentStage = 0;
+  <script>
+    const stages = [
+      [
+        `<span class="human">Human</span>: Hey there, I've been thinking about what to do with <span class="orange">the tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with <span class="orange">them (tomatoes)</span>?`,
+        `<span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.`,
+        `<span class="human">Human</span>: That's exactly what I was thinking! I could use <span class="orange">them (tomatoes)</span> to create a savory sauce for pasta or maybe even a comforting soup. Do we have everything we need to cook <span class="orange">them (tomatoes)</span>, though?`,
+        `<span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.`,
+        `<span class="human">Human</span>: Perfect! I want to make sure they're well-seasoned when we cook <span class="orange">them (tomatoes)</span>. Could you remind me how to properly prepare <span class="orange">the fruit (tomatoes)</span> before cooking?`,
+        `<span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.`,
+        `<span class="human">Human</span>: Great, that sounds easy enough! Let's get started with cooking <span class="red">the fruit (tomatoes)</span>. Once they're cooked and ready, I'll need you to put <span class="red">them</span> in the refrigerator.`
+      ],
 
-      function createBox(stageIndex, boxIndex) {
-        const box = document.createElement("div");
-        box.className = "text-box";
-        container.appendChild(box);
+      [
+        `<span class="human">Human</span>: Hey there, I've been thinking about what to do with the tomatoes we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked tomatoes?`,
+        `<span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.`,
+        `<span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting tomato soup. <span class="red">I know Mug Star would love to help with that!</span> Do we have everything we need to cook the tomatoes, though?</span>`,
+        `<span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.`,
+        `<span class="human">Human</span>: Perfect! I want to make sure the tomatoes are well-seasoned when we cook them.</span> <span class="red">I bet Mug Star would add his own twist with some cheesy jokes while we cook.</span> Could you remind me how to properly prepare the tomatoes before cooking?`,
+        `<span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.`,
+        `<span class="human">Human</span>: Great, that sounds easy enough!</span> Let's get started with cooking the tomatoes. Once they're cooked and ready, I'll need you to put a cooked tomato in the refrigerator. <span class="red">I can already imagine Mug Star popping in with a funny quip about how tomatoes are technically a fruit!</span>`
+      ],
+      [
+        `<span class="human">Human</span>: Hey there, I've been thinking about what to do with the tomatoes we have. <span class="blue-strike">I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked tomatoes?</span>`,
+        `<span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.`,
+        `<span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting tomato soup. <span class="red">I know Mug Star would love to help with that!</span> <span class="blue-strike">Do we have everything we need to cook the tomatoes, though?</span>`,
+        `<span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.`,
+        `<span class="human">Human</span>: <span class="blue-strike">Perfect! I want to make sure the tomatoes are well-seasoned when we cook them.</span> <span class="red">I bet Mug Star would add his own twist with some cheesy jokes while we cook.</span> Could you remind me how to properly prepare the tomatoes before cooking?`,
+        `<span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.`,
+        `<span class="human">Human</span>: <span class="blue-strike">Great, that sounds easy enough!</span> Let's get started with cooking the tomatoes. Once they're cooked and ready, I'll need you to put a cooked tomato in the refrigerator. <span class="red">I can already imagine Mug Star popping in with a funny quip about how tomatoes are technically a fruit!</span>`
+      ]
+    ];
+    const container = document.getElementById("boxContainer");
+    const mainBtn = document.getElementById("mainBtn");
+    const dmp = new diff_match_patch();
+    const boxObjects = [];
+    let currentStage = 0;
 
-        let currentText = stages[stageIndex][boxIndex];
+    function extractRole(html) {
+      if (html.includes('class="human"')) return 'human';
+      if (html.includes('class="robot"')) return 'robot';
+      return 'human';
+    }
 
-        function typeInitial(callback) {
-          let i = 0;
-          function step() {
-            if (i <= currentText.length) {
-              box.innerHTML = currentText.slice(0, i);
-              i++;
-              setTimeout(step, 30);
-            } else {
-              callback();
-            }
+    function wrapInChatBox(role, content) {
+      const wrapper = document.createElement("div");
+      wrapper.className = `chat-wrapper ${role}`;
+      wrapper.innerHTML = `
+        <div class="avatar ${role}"></div>
+        <div class="text-box"></div>
+      `;
+      const box = wrapper.querySelector(".text-box");
+      box.innerHTML = content;
+      return { wrapper, box };
+    }
+
+    function createBox(stageIndex, boxIndex) {
+      const rawText = stages[stageIndex][boxIndex];
+      const role = extractRole(rawText);
+      const { wrapper, box } = wrapInChatBox(role, "");
+
+      container.appendChild(wrapper);
+      let currentText = rawText;
+
+      function typeInitial(callback) {
+        let i = 0;
+        function step() {
+          if (i <= currentText.length) {
+            box.innerHTML = currentText.slice(0, i);
+            i++;
+            setTimeout(step, 30);
+          } else {
+            callback();
           }
-          step();
         }
-
-        function typeToNext(nextText, callback) {
-          const diffs = dmp.diff_main(currentText, nextText);
-          dmp.diff_cleanupSemantic(diffs);
-
-          let result = '';
-          let i = 0;
-          let charIndex = 0;
-
-          function step() {
-            if (i >= diffs.length) {
-              currentText = nextText;
-              callback();
-              return;
-            }
-            const [op, data] = diffs[i];
-            if (op === 0) {
-              result += data;
-              box.innerHTML = result;
-              i++;
-              step();
-            } else if (op === 1) {
-              if (charIndex < data.length) {
-                result += data[charIndex];
-                box.innerHTML = result;
-                charIndex++;
-                setTimeout(step, 30);
-              } else {
-                i++;
-                charIndex = 0;
-                step();
-              }
-            } else if (op === -1) {
-              i++;
-              step();
-            }
-          }
-          step();
-        }
-
-        return {
-          typeInitial,
-          typeToNext,
-          get currentText() {
-            return currentText;
-          }
-        };
+        step();
       }
 
-      (async () => {
-        for (let i = 0; i < stages[0].length; i++) {
-          const boxObj = createBox(0, i);
-          boxObjects.push(boxObj);
-          await new Promise(resolve => boxObj.typeInitial(resolve));
-          await new Promise(r => setTimeout(r, 200)); // 每段之间等待一段时间
-        }
-        mainBtn.disabled = false;
-      })();
+      function typeToNext(nextText, callback) {
+        const diffs = dmp.diff_main(currentText, nextText);
+        dmp.diff_cleanupSemantic(diffs);
 
-      mainBtn.onclick = async () => {
-        mainBtn.disabled = true;
-        const nextStage = (currentStage + 1) % stages.length;
-        for (let i = 0; i < boxObjects.length; i++) {
-          const nextText = stages[nextStage][i];
-          await new Promise(resolve => {
-            boxObjects[i].typeToNext(nextText, resolve);
-          });
-          await new Promise(r => setTimeout(r, 400));
+        let i = 0;
+        let charIndex = 0;
+        let result = '';
+
+        function step() {
+          if (i >= diffs.length) {
+            currentText = nextText;
+            callback();
+            return;
+          }
+
+          const [op, data] = diffs[i];
+
+          if (op === 0) {
+            // Equal: add whole chunk immediately
+            result += data;
+            box.innerHTML = result;
+            i++;
+            step();
+          } else if (op === 1) {
+            // Insert: type one char at a time
+            if (charIndex < data.length) {
+              result += data[charIndex];
+              box.innerHTML = result;
+              charIndex++;
+              setTimeout(step, 30);
+            } else {
+              i++;
+              charIndex = 0;
+              step();
+            }
+          } else if (op === -1) {
+            // Delete: skip; assume it's already struck out in HTML or handled semantically
+            i++;
+            step();
+          }
         }
-        currentStage = nextStage;
-        mainBtn.disabled = false;
+
+        step();
+      }
+
+
+      return {
+        typeInitial,
+        typeToNext
       };
+    }
 
-    </script>
+    (async () => {
+      for (let i = 0; i < stages[0].length; i++) {
+        const boxObj = createBox(0, i);
+        boxObjects.push(boxObj);
+        await new Promise(resolve => boxObj.typeInitial(resolve));
+        await new Promise(r => setTimeout(r, 200));
+      }
+      mainBtn.disabled = false;
+    })();
+
+    mainBtn.onclick = async () => {
+      mainBtn.disabled = true;
+      const nextStage = (currentStage + 1) % stages.length;
+      for (let i = 0; i < boxObjects.length; i++) {
+        const nextText = stages[nextStage][i];
+        await new Promise(resolve => boxObjects[i].typeToNext(nextText, resolve));
+        await new Promise(r => setTimeout(r, 400));
+      }
+      currentStage = nextStage;
+      mainBtn.disabled = false;
+    };
+  </script>
 
 <!-- 实验结果展示 -->
 <h2>Evaluations</h2>
