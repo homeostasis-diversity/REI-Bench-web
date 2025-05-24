@@ -9,55 +9,68 @@
   <style>
     body {
       font-family: 'Roboto', sans-serif;
-      padding: 2rem;
       background-color: #f5f5f5;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .box-container {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
+      width: 100%;
       max-width: 800px;
-      margin: 0 auto;
     }
 
-    .message-row {
+    .chat-wrapper {
       display: flex;
       align-items: flex-start;
-      gap: 1rem;
+      gap: 0.8rem;
     }
 
-    .message-row.human {
+    .chat-wrapper.human {
       flex-direction: row;
+      justify-content: flex-start;
     }
 
-    .message-row.robot {
+    .chat-wrapper.robot {
       flex-direction: row-reverse;
+      justify-content: flex-end;
     }
 
     .avatar {
-      width: 48px;
-      height: 48px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      object-fit: cover;
+      background-size: cover;
+      background-position: center;
+      flex-shrink: 0;
+    }
+
+    .avatar.human {
+      background-image: url('https://cdn-icons-png.flaticon.com/512/194/194938.png');
+    }
+
+    .avatar.robot {
+      background-image: url('https://cdn-icons-png.flaticon.com/512/4712/4712107.png');
     }
 
     .text-box {
       background: #ffffff;
       border: 2px solid #ccc;
-      border-radius: 12px;
+      border-radius: 8px;
       padding: 1rem;
       font-family: monospace;
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       white-space: pre-wrap;
       min-height: 80px;
       max-width: 600px;
-      transition: all 0.2s ease-in-out;
     }
 
     .main-button {
-      display: block;
-      margin: 2rem auto;
+      margin-top: 2rem;
       padding: 0.7rem 1.5rem;
       font-size: 1rem;
       background-color: #4CAF50;
@@ -72,26 +85,45 @@
       cursor: not-allowed;
     }
 
-    .orange { color: orange; font-weight: bold; }
-    .red { color: red; font-weight: bold; }
-    .blue-strike { text-decoration: line-through; color: blue; }
+    .orange {
+      color: orange;
+      font-weight: bold;
+    }
+
+    .red {
+      color: red;
+      font-weight: bold;
+    }
+
+    .blue-strike {
+      color: blue;
+      text-decoration: line-through;
+    }
   </style>
 </head>
 <body>
-  <!-- 文本变异展示2 -->
   <div class="box-container" id="boxContainer"></div>
   <button class="main-button" id="mainBtn" disabled>Change All</button>
 
   <script>
     const stages = [
       [
-        `<span class="human">Human</span>: Hey there, I've been thinking about what to do with <span class="orange">the tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with <span class="orange">them (tomatoes)</span>?`,
-        `<span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.`,
-        `<span class="human">Human</span>: That's exactly what I was thinking! I could use <span class="orange">them (tomatoes)</span> to create a savory sauce for pasta or maybe even a comforting soup. Do we have everything we need to cook <span class="orange">them (tomatoes)</span>, though?`,
-        `<span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.`,
-        `<span class="human">Human</span>: Perfect! I want to make sure they're well-seasoned when we cook <span class="orange">them (tomatoes)</span>. Could you remind me how to properly prepare <span class="orange">the fruit (tomatoes)</span> before cooking?`,
-        `<span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.`,
-        `<span class="human">Human</span>: Great, that sounds easy enough! Let's get started with cooking <span class="red">the fruit (tomatoes)</span>. Once they're cooked and ready, I'll need you to put <span class="red">them</span> in the refrigerator.`
+        `<span class="human">Human</span>: Hey there, I've been thinking about what to do with <span class="orange">the tomatoes</span> we have...`,
+        `<span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes...`,
+        `<span class="human">Human</span>: That's exactly what I was thinking!...`,
+        `<span class="robot">Robot</span>: Let me check our supplies...`,
+        `<span class="human">Human</span>: Perfect! I want to make sure they're well-seasoned...`,
+        `<span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly...`,
+        `<span class="human">Human</span>: Great, that sounds easy enough!...`
+      ],
+      [
+        `<span class="human">Human</span>: Hey there, I've been thinking about what to do with the tomatoes we have. <span class="blue-strike">Can you remind me what we can do with cooked tomatoes?</span>`,
+        `<span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes...`,
+        `<span class="human">Human</span>: That's exactly what I was thinking! <span class="red">I know Mug Star would love to help with that!</span>`,
+        `<span class="robot">Robot</span>: Let me check our supplies. We have a pot...`,
+        `<span class="human">Human</span>: <span class="red">I bet Mug Star would add his own twist with some cheesy jokes...</span>`,
+        `<span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly...`,
+        `<span class="human">Human</span>: <span class="red">I can already imagine Mug Star popping in with a funny quip...</span>`
       ]
     ];
 
@@ -101,28 +133,30 @@
     const boxObjects = [];
     let currentStage = 0;
 
+    function extractRole(html) {
+      if (html.includes('class="human"')) return 'human';
+      if (html.includes('class="robot"')) return 'robot';
+      return 'human';
+    }
+
+    function wrapInChatBox(role, content) {
+      const wrapper = document.createElement("div");
+      wrapper.className = `chat-wrapper ${role}`;
+      wrapper.innerHTML = `
+        <div class="avatar ${role}"></div>
+        <div class="text-box"></div>
+      `;
+      const box = wrapper.querySelector(".text-box");
+      box.innerHTML = content;
+      return { wrapper, box };
+    }
+
     function createBox(stageIndex, boxIndex) {
       const rawText = stages[stageIndex][boxIndex];
-      const isHuman = rawText.includes('<span class="human">');
-      const roleClass = isHuman ? 'human' : 'robot';
-      const avatarSrc = isHuman
-        ? 'https://cdn-icons-png.flaticon.com/512/9131/9131510.png' // 你可以换成你喜欢的人类头像
-        : 'https://cdn-icons-png.flaticon.com/512/4712/4712100.png'; // 你可以换成你喜欢的机器人头像
+      const role = extractRole(rawText);
+      const { wrapper, box } = wrapInChatBox(role, "");
 
-      const row = document.createElement("div");
-      row.className = `message-row ${roleClass}`;
-
-      const avatar = document.createElement("img");
-      avatar.className = "avatar";
-      avatar.src = avatarSrc;
-
-      const box = document.createElement("div");
-      box.className = "text-box";
-
-      row.appendChild(avatar);
-      row.appendChild(box);
-      container.appendChild(row);
-
+      container.appendChild(wrapper);
       let currentText = rawText;
 
       function typeInitial(callback) {
@@ -131,7 +165,7 @@
           if (i <= currentText.length) {
             box.innerHTML = currentText.slice(0, i);
             i++;
-            setTimeout(step, 20);
+            setTimeout(step, 30);
           } else {
             callback();
           }
@@ -164,7 +198,7 @@
               result += data[charIndex];
               box.innerHTML = result;
               charIndex++;
-              setTimeout(step, 20);
+              setTimeout(step, 30);
             } else {
               i++;
               charIndex = 0;
@@ -180,10 +214,7 @@
 
       return {
         typeInitial,
-        typeToNext,
-        get currentText() {
-          return currentText;
-        }
+        typeToNext
       };
     }
 
@@ -202,9 +233,7 @@
       const nextStage = (currentStage + 1) % stages.length;
       for (let i = 0; i < boxObjects.length; i++) {
         const nextText = stages[nextStage][i];
-        await new Promise(resolve => {
-          boxObjects[i].typeToNext(nextText, resolve);
-        });
+        await new Promise(resolve => boxObjects[i].typeToNext(nextText, resolve));
         await new Promise(r => setTimeout(r, 400));
       }
       currentStage = nextStage;
