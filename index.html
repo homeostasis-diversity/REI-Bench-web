@@ -1,21 +1,280 @@
 <!DOCTYPE html>
 <html lang="en">
+<!-- 网页设定 -->
+
 <head>
+  <!-- 网页基础信息设置 -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>REI-Bench: Vague Instructions in Task Planning</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/diff-match-patch@1.0.5/index.js"></script>
+
+  <!-- 页面样式定义 -->
   <style>
+    /* 整体页面字体、行距、背景颜色和内边距设置 */
     body {
       font-family: 'Roboto', sans-serif;
-      background-color: #f5f5f5;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      background: white;
+      margin: 0;
+      padding: 40px;
+      text-align: center;
+      color: #333;
     }
 
+    /* 标题样式：颜色和居中 */
+    h1 {
+      font-size: 2.5em;
+      background: linear-gradient(to right, #f97316, #22c55e, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.3em;
+    }
+
+    /* 标题样式 */
+    h1 span {
+      color: #f97316;
+    }
+
+    h2 {
+      margin-top: 60px;
+      font-size: 1.6em;
+      color: #222;
+      text-align: left;
+    }
+
+    h2.abstract-heading {
+      text-align: center;
+    }
+
+    h3 {
+      margin-top: 30px;
+      font-size: 1.3em;
+      color: #333;
+      text-align: left;
+    }
+
+    /* 正文样式-默认 */
+    .text-default {
+      font-size: 1.05em;
+      text-align: justify;
+    }
+
+    .text-abstract {
+      font-size: 1.05em;
+      text-align: justify;
+      max-width: 70%;
+      margin: 0 auto; /* 居中 */
+      color: #444;
+    }
+
+
+    /* 作者信息样式 */
+    .authors {
+      font-size: 1.5em;
+      margin: 15px 0;
+    }
+
+    .authors a {
+      color: #3b82f6;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+
+    .affiliation {
+      color: #0a0a0a;
+    }
+
+    .lab-link {
+      font-weight: bold;
+      background: linear-gradient(90deg, #ef4444, #f59e0b, #facc15); /* 红 -> 橙 -> 黄 */
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+
+    .lab-link:hover {
+      text-decoration: underline;
+    }
+
+
+    .email {
+      margin-top: 15px;
+      font-family: monospace;
+      font-size: 1.5em;
+    }
+
+    /* 个人页面等跳转按钮设计 */
+    .buttons {
+      margin-top: 25px;
+    }
+
+    .buttons a {
+      display: inline-block;
+      background: #1f2937;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 30px;
+      margin: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .buttons a:hover {
+      background: #4b5563;
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 1.1em;
+      color: #555;
+    }
+
+    /* 头图样式 */
+    img {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin-top: 20px;
+    }
+
+    /* 页面主容器样式：宽度、居中、白色背景、内边距、圆角 */
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    /* 表格样式：宽度、边框、间距 */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    /* 表格内容样式：边框、内边距、左对齐 */
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+
+    /* 表头背景色 */
+    th {
+      background-color: #f2f2f2;
+    }
+
+    /* iframe 视频展示区域样式 */
+    iframe {
+      width: 100%;
+      height: 400px;
+      margin-top: 20px;
+      border: none;
+    }
+
+    .image-display {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 30px;
+    }
+
+    /* === 按钮 === */
+    button {
+      display: inline-block;
+      padding: 10px 22px;
+      font-size: 15px;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(90deg,#ff7b7b,#ff5064); /* 渐变 */
+      color: #fff;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,.15);
+    }
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0,0,0,.2);
+    }
+
+    /* 可互动图片展示区域样式 */
+    .image-display {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .image-display img {
+      max-width: 90%;
+      width: 500px;
+      height: auto;
+      border-radius: 1rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .image-display img:hover {
+      transform: scale(1.02);
+    }
+
+    .image-display-prompting img {
+      width: 70%;          /* 宽度占父容器70% */
+      max-width: 500px;    /* 最大不超过500px */
+      height: auto;        /* 高度自适应 */
+      border-radius: 1rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .image-display-prompting img:hover {
+      transform: scale(1.02);
+    }
+
+    .selector {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .selector div {
+      background: #fff;
+      padding: 1rem 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .selector div:hover {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    select {
+      font-size: 1rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+      width: 100%;
+    }
+
+    /* 文本变异控件 */
     .box-container {
       display: flex;
       flex-direction: column;
@@ -101,10 +360,68 @@
     }
   </style>
 </head>
-<body>
-  <h1><span>REI-Bench</span>: Can Embodied Agents Understand Vague Human Instructions in Task Planning? (Under Construction)</h1>
 
-  <div class="box-container" id="boxContainer"></div>
+<body>
+  <!-- 页面主体容器 -->
+  <div class="container">
+
+    <!-- 页面主标题 -->
+    <h1><span>REI-Bench</span>: Can Embodied Agents Understand Vague Human Instructions in Task Planning? (Underaaa Construction)</h1>
+
+    <!-- 作者信息区 -->
+    <div class="authors">
+      <a href="#">Chenxi Jiang, Chuhao Zhou, Jianfei Yang</a>
+    </div>
+    <div class="affiliation">
+      <a class="lab-link" href="https://marslab.tech/" target="_blank">MARS Lab</a>, Nanyang Technological University
+    </div>
+    <div class="email">{CHENXI003, chuhao002, jianfei.yang}@ntu.edu.sg</div>
+
+
+    <!-- 个人链接跳转按钮 -->
+    <div class="buttons">
+        <!-- <a href="https://github.com/你的用户名/代码仓库" target="_blank" rel="noopener noreferrer">Code</a> -->
+        <a href="https://arxiv.org/pdf/2505.10872" target="_blank" rel="noopener noreferrer">Paper</a>
+        <a href="https://arxiv.org/abs/2505.10872" target="_blank" rel="noopener noreferrer">arXiv</a>
+        <!-- <a href="你的BibTeX链接或页面" target="_blank" rel="noopener noreferrer">BibTeX</a> -->
+    </div>
+
+    <!-- <div class="footer">
+        Under review at CoRL 2025
+    </div> -->
+
+    <!-- teaser区域 -->
+    <img src="media\figure1_teaser_motivation.png" alt="Teaser Image" />
+
+    <section style="margin-top: 40px;">
+      <h2 class="abstract-heading">Abstract</h2>
+      <p class="text-abstract">
+        Robot task planning decomposes human instructions into executable action sequences that enable robots to complete a series of complex tasks. Although recent large language model (LLM)-based task planners achieve amazing performance, they assume that human instructions are clear and straightforward. However, real-world users are not experts, and their instructions to robots often contain significant vagueness. Linguists suggest that such vagueness frequently arises from referring expressions (REs), whose meanings depend heavily on dialogue context and environment. This vagueness is even more prevalent among the elderly and children, who robots should serve more. This paper studies how such vagueness in REs within human instructions affects LLM-based robot task planning and how to overcome this issue. To this end, we propose the first robot task planning benchmark with vague REs (REI-Bench), where we discover that the vagueness of REs can severely degrade robot planning performance, leading to success rate drops of up to 77.9%. We also observe that most failure cases stem from missing objects in planners. To mitigate the REs issue, we propose a simple yet effective approach: task-oriented context cognition, which generates clear instructions for robots, achieving state-of-the-art performance compared to aware prompt and chains of thought. This work contributes to the research community of human-robot interaction (HRI) by making robot task planning more practical, particularly for non-expert users, e.g., the elderly and children.
+      </p>
+    </section>
+
+    <!-- 视频区域 -->
+    <h2>Motivation</h2>
+    <p class="text-default">
+        Robots are getting better at following natural language instructions thanks to large language models (LLMs). But there's a catch: most current systems assume humans always speak clearly and precisely. In reality, we don’t. We often say things like “it” or “that heavy thing,” expecting others to figure it out from context. While humans are great at this, robots struggle—especially in real-world settings like kitchens, where vague terms can lead to serious misunderstandings. 
+        This kind of vagueness, known as coreferential vagueness, is everywhere in our daily language. It happens when we refer to something without naming it directly. For example, “Move it” could mean a pot, a plate, or anything else nearby. Humans use context and memory to guess the right meaning, but LLM-based robot planners often fail.
+    </p>
+
+    <!-- 本地视频播放 -->
+    <video width="900" height="500" controls>
+        <source src="media/video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+
+    <!-- 研究内容介绍 -->
+    <h2>Method</h2>
+    <p class="text-default">
+        We study how implicit referring expressions (REs)—vague or indirect references in multi-turn human-robot dialogues—affect the performance of LLM-based robot task planners. Unlike prior work focusing on clear, single-turn instructions, our method systematically models different levels of RE vagueness and dialogue context variations that introduce ambiguity. We create the REI dataset based on embodied task instructions, combining various RE types and context conditions to benchmark planners. Finally, we propose a simple yet effective prompting method, TOCC, to help planners better interpret implicit REs and improve task success rates.
+    </p>
+
+    <!-- 文本变异展示2 -->
+    <div class="box-container" id="boxContainer"></div>
   <button class="main-button" id="mainBtn" disabled>Change All</button>
 
   <script>
@@ -258,5 +575,140 @@
       mainBtn.disabled = false;
     };
   </script>
+
+<!-- 实验结果展示 -->
+<h2>Evaluations</h2>
+<h3 style="text-align: left;">Benchmark Result</h3>
+<p class="text-default">
+  Existing LLM-based task planners struggle to handle instructions in multi-turn dialogues, particularly when implicit referring expressions introduce ambiguity. In contrast, noise and partial context omission have less impact on their performance. These challenges are common in real-world human-robot interactions and need to be addressed.
+</p>
+<!-- 主展示区 -->
+<div class="image-display" style="
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    flex-wrap: nowrap;
+">
+    <div style="width: 500px; text-align: center;">
+        <img id="imgLeft" src="media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" width="100%">
+        <p id="labelLeft">LLaMA3.1-8B + SayCan</p>
+        <select id="selectLeft" style="width: 100%;"></select>
+    </div>
+    <div style="width: 500px; text-align: center;">
+        <img id="imgRight" src="media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" width="100%">
+        <p id="labelRight">GPT-4o-mini + SayCan</p>
+        <select id="selectRight" style="width: 100%;"></select>
+    </div>
+</div>
+
+
+<script>
+    const imageList = [
+        { name: "LLaMA3.1-8B + SayCan", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" },
+        { name: "GPT-4o-mini + SayCan", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" },
+        { name: "DeepSeekMath-7B + SayCan", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__SayCan.jpg" },
+        { name: "Gemma2-9B + SayCan", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__SayCan.jpg" },
+        { name: "Ministral-8B + SayCan", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__SayCan.jpg" },
+        { name: "Qwen2.5-7B + SayCan", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__SayCan.jpg" },
+        { name: "LLaMA3.1-8B + LLM+P", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__LLM+P.jpg" },
+        { name: "GPT-4o-mini + LLM+P", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__LLM+P.jpg" },
+        { name: "DeepSeekMath-7B + LLM+P", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__LLM+P.jpg" },
+        { name: "Gemma2-9B + LLM+P", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__LLM+P.jpg" },
+        { name: "Ministral-8B + LLM+P", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__LLM+P.jpg" },
+        { name: "Qwen2.5-7B + LLM+P", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__LLM+P.jpg" },
+    ];
+
+    const selectLeft = document.getElementById("selectLeft");
+    const selectRight = document.getElementById("selectRight");
+    const imgLeft = document.getElementById("imgLeft");
+    const imgRight = document.getElementById("imgRight");
+    const labelLeft = document.getElementById("labelLeft");
+    const labelRight = document.getElementById("labelRight");
+
+    imageList.forEach((item, index) => {
+        const optionL = new Option(item.name, index);
+        const optionR = new Option(item.name, index);
+        selectLeft.add(optionL);
+        selectRight.add(optionR);
+    });
+
+    selectLeft.selectedIndex = 0;
+    selectRight.selectedIndex = 1;
+
+    function updateImagesBenchmark() {
+        const indexLeft = parseInt(selectLeft.value);
+        const indexRight = parseInt(selectRight.value);
+        imgLeft.src = imageList[indexLeft].path;
+        labelLeft.textContent = imageList[indexLeft].name;
+
+        imgRight.src = imageList[indexRight].path;
+        labelRight.textContent = imageList[indexRight].name;
+    }
+
+    selectLeft.addEventListener("change", updateImagesBenchmark);
+    selectRight.addEventListener("change", updateImagesBenchmark);
+</script>
+
+<h3>Prompting Method</h3>
+<p class="text-default">
+  Among the three prompting methods compared, TOCC achieves the best performance by separating implicit RE resolution from task planning and providing clearer instructions. While AP improves performance by highlighting potential vagueness, it can sometimes cause confusion, and CoT offers moderate improvement through autonomous analysis of implicit REs.
+</p>
+<div class="image-display-prompting" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <div style="width: 700px; text-align: center;">
+        <img id="imgPrompting" src="media/fig2_gemma.png" style="max-width: 100%; height: auto;">
+        <p id="labelPrompting" style="text-align: center;">LLaMA3.1-8B + SayCan</p>
+        <select id="selectPrompting" style="width: 100%;"></select>
+    </div>
+</div>
+
+<script>
+    const prompting_imageList = [
+        { name: "LLaMA3.1-8B + SayCan", path: "media/fig1_llama.png" },
+        { name: "DeepSeekMath-7B + SayCan", path: "media/fig3_deepseek.png" },
+        { name: "Gemma2-9B + SayCan", path: "media/fig2_gemma.png" },
+        { name: "Ministral-8B + SayCan", path: "media/fig4_ministral.png" },
+        { name: "Qwen2.5-7B + SayCan", path: "media/fig5_qwen.png" }
+    ];
+
+    const selectPrompting = document.getElementById("selectPrompting");
+    const imgPrompting = document.getElementById("imgPrompting");
+    const labelPrompting = document.getElementById("labelPrompting");
+
+    prompting_imageList.forEach((item, index) => {
+        const option = new Option(item.name, index);
+        selectPrompting.add(option);
+    });
+
+    selectPrompting.selectedIndex = 0;
+
+    function updateImagesPrompting() {
+        const indexPrompting = parseInt(selectPrompting.value);
+        imgPrompting.src = prompting_imageList[indexPrompting].path;
+        labelPrompting.textContent = prompting_imageList[indexPrompting].name;
+    }
+
+    selectPrompting.addEventListener("change", updateImagesPrompting);
+</script>
+
+
+  <!-- 相关研究 -->
+  <h2>Related Works</h2>
+
+  <h2 style="color: #2c7edb; font-family: sans-serif;">BibTeX</h2>
+  <div style="background-color: #f7f7f7; padding: 1em; font-family: monospace; white-space: pre; text-align: left;">
+    @misc{jiang2025rei-bench,<br>
+    &nbsp;&nbsp;title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {{REI-Bench}: Can Embodied Agents Understand Vague Human Instructions in Task Planning?},<br>
+    &nbsp;&nbsp;author&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {Chenxi Jiang and Chuhao Zhou and Jianfei Yang},<br>
+    &nbsp;&nbsp;year&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {2025},<br>
+    &nbsp;&nbsp;eprint&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {2505.10872},<br>
+    &nbsp;&nbsp;archivePrefix= {arXiv},<br>
+    &nbsp;&nbsp;primaryClass&nbsp;= {cs.RO},<br>
+    &nbsp;&nbsp;url&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {https://arxiv.org/abs/2505.10872},<br>
+    &nbsp;&nbsp;note&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {arXiv preprint arXiv:2505.10872}<br>
+    }
+  </div>
+
+  </div> <!-- 结束 .container -->
 </body>
 </html>
