@@ -519,17 +519,17 @@
         };
       }
 
-      let initialized = 0;
-      for (let i = 0; i < stages[0].length; i++) {
-        const boxObj = createBox(0, i);
-        boxObjects.push(boxObj);
-        boxObj.typeInitial(() => {
-          initialized++;
-          if (initialized === boxObjects.length) {
-            mainBtn.disabled = false;
-          }
-        });
-      }
+      // let initialized = 0;
+      // for (let i = 0; i < stages[0].length; i++) {
+      //   const boxObj = createBox(0, i);
+      //   boxObjects.push(boxObj);
+      //   boxObj.typeInitial(() => {
+      //     initialized++;
+      //     if (initialized === boxObjects.length) {
+      //       mainBtn.disabled = false;
+      //     }
+      //   });
+      // }
 
       // mainBtn.onclick = async () => {
       //   mainBtn.disabled = true;
