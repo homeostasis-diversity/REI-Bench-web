@@ -21,6 +21,105 @@
       padding: 40px;
     }
 
+    #chat-container {
+      width: 700px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .dialog {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .dialog.human {
+      flex-direction: row;
+    }
+
+    .dialog.robot {
+      flex-direction: row-reverse;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      background-size: cover;
+      background-position: center;
+      margin: 0 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .avatar.human {
+      background-image: url('https://cdn-icons-png.flaticon.com/512/194/194938.png');
+    }
+
+    .avatar.robot {
+      background-image: url('https://cdn-icons-png.flaticon.com/512/4712/4712027.png');
+    }
+
+    .bubble {
+      background: #f9f9f9;
+      padding: 14px 18px;
+      border-radius: 16px;
+      max-width: 70%;
+      font-size: 14px;
+      line-height: 1.5;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .button-container {
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .button-container button {
+      margin: 0 10px;
+      padding: 10px 18px;
+      font-size: 14px;
+      border: none;
+      border-radius: 8px;
+      background-color: #0077cc;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .button-container button:hover {
+      background-color: #005fa3;
+    }
+
+    span.human {
+      font-weight: bold;
+      color: #0077cc;
+    }
+
+    span.robot {
+      font-weight: bold;
+      color: #cc5500;
+    }
+
+    span.orange {
+      color: orange;
+      font-weight: bold;
+    }
+
+    span.red {
+      color: red;
+      font-weight: bold;
+    }
+
+    span.blue-strike {
+      color: blue;
+      text-decoration: line-through;
+    }
+
+    /* 这里是之前的 */
+
     .box-container {
       display: flex;
       flex-direction: column;
@@ -109,7 +208,8 @@
 <body>
   <h1><span>REI-Bench</span>: Can Embodied Agents Understand Vague Human Instructions in Task Planning? (Underaaa Construction)</h1>
 
-  <div class="box-container" id="boxContainer"></div>
+  <div id="chat-container"></div>
+  <!-- <div class="box-container" id="boxContainer"></div> -->
   <button class="main-button" id="mainBtn" disabled>Change All</button>
 
   <script>
