@@ -71,24 +71,37 @@
 
     /* 作者信息样式 */
     .authors {
-      font-size: 1.1em;
-      margin: 10px 0;
+      font-size: 1.5em;
+      margin: 15px 0;
     }
 
     .authors a {
       color: #3b82f6;
       text-decoration: none;
-      margin: 0 5px;
+      margin: 0 8px;
     }
 
     .affiliation {
-      color: #ef4444;
+      color: #0a0a0a;
     }
 
+    .lab-link {
+      font-weight: bold;
+      background: linear-gradient(90deg, #ef4444, #f59e0b, #facc15); /* 红 -> 橙 -> 黄 */
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+
+    .lab-link:hover {
+      text-decoration: underline;
+    }
+
+
     .email {
-      margin-top: 5px;
+      margin-top: 15px;
       font-family: monospace;
-      font-size: 0.95em;
+      font-size: 1.5em;
     }
 
     /* 个人页面等跳转按钮设计 */
@@ -269,6 +282,19 @@
       transform: scale(1.02);
     }
 
+    .image-display-prompting img {
+      width: 70%;          /* 宽度占父容器70% */
+      max-width: 500px;    /* 最大不超过500px */
+      height: auto;        /* 高度自适应 */
+      border-radius: 1rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .image-display-prompting img:hover {
+      transform: scale(1.02);
+    }
+
     .selector {
       display: flex;
       justify-content: center;
@@ -302,6 +328,42 @@
       border: 1px solid #ccc;
       width: 100%;
     }
+
+    /* 文本变异控件 */
+    .box-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .text-box {
+      background: #ffffff;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 1.1rem;
+      white-space: pre-wrap;
+      min-height: 80px;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .main-button {
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
+      background-color: #4CAF50;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .main-button:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 
@@ -310,26 +372,29 @@
   <div class="container">
 
     <!-- 页面主标题 -->
-    <h1><span>REI-Bench</span>: Can Embodied Agents Understand Vague Human Instructions in Task Planning? (Under Construction)</h1>
+    <h1><span>REI-Bench</span>: Can Embodied Agents Understand Vague Human Instructions in Task Planning? (Underaaa Construction)</h1>
 
     <!-- 作者信息区 -->
     <div class="authors">
-        <a href="#">Chenxi Jiang,  Chuhao Zhou,  Jianfei Yang</a>
+      <a href="#">Chenxi Jiang, Chuhao Zhou, Jianfei Yang</a>
     </div>
-    <div class="affiliation">MARS Lab, Nanyang Technological University</div>
+    <div class="affiliation">
+      <a class="lab-link" href="https://marslab.tech/" target="_blank">MARS Lab</a>, Nanyang Technological University
+    </div>
     <div class="email">{CHENXI003, chuhao002, jianfei.yang}@ntu.edu.sg</div>
+
 
     <!-- 个人链接跳转按钮 -->
     <div class="buttons">
-        <a href="#">Code</a>
-        <a href="#">Paper</a>
-        <a href="#">arXiv</a>
-        <a href="#">BibTeX</a>
+        <!-- <a href="https://github.com/你的用户名/代码仓库" target="_blank" rel="noopener noreferrer">Code</a> -->
+        <a href="https://arxiv.org/pdf/2505.10872" target="_blank" rel="noopener noreferrer">Paper</a>
+        <a href="https://arxiv.org/abs/2505.10872" target="_blank" rel="noopener noreferrer">arXiv</a>
+        <!-- <a href="你的BibTeX链接或页面" target="_blank" rel="noopener noreferrer">BibTeX</a> -->
     </div>
 
-    <div class="footer">
+    <!-- <div class="footer">
         Under review at CoRL 2025
-    </div>
+    </div> -->
 
     <!-- teaser区域 -->
     <img src="media\figure1_teaser_motivation.png" alt="Teaser Image" />
@@ -349,7 +414,7 @@
     </p>
 
     <!-- 本地视频播放 -->
-    <video width="960" height="540" controls>
+    <video width="900" height="500" controls>
         <source src="media/video.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
@@ -360,60 +425,148 @@
     <p class="text-default">
         We study how implicit referring expressions (REs)—vague or indirect references in multi-turn human-robot dialogues—affect the performance of LLM-based robot task planners. Unlike prior work focusing on clear, single-turn instructions, our method systematically models different levels of RE vagueness and dialogue context variations that introduce ambiguity. We create the REI dataset based on embodied task instructions, combining various RE types and context conditions to benchmark planners. Finally, we propose a simple yet effective prompting method, TOCC, to help planners better interpret implicit REs and improve task success rates.
     </p>
-    <!-- 文本变异展示 -->
-    <div id="dialogue" class="dialogue-box">
-      <div class="dialogue-entry"><p><span class="human">Human</span>: Hey there, I've been thinking about what to do with the <span class="red">tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked <span class="red">tomatoes</span>?</p></div>
-      
-      <div class="dialogue-entry"><p><span class="robot">Robot</span>: Absolutely, Alice! Cooked <span class="red">tomatoes</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.</p></div>
-      
-      <div class="dialogue-entry"><p><span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting <span class="red">tomato</span> soup. Do we have everything we need to cook the <span class="red">tomatoes</span>, though?</p></div>
-      
-      <div class="dialogue-entry"><p><span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking the <span class="red">tomatoes</span> to perfection.</p></div>
-      
-      <div class="dialogue-entry"><p><span class="human">Human</span>: Perfect! I want to make sure the <span class="red">tomatoes</span> are well-seasoned when we cook them. Could you remind me how to properly prepare the <span class="red">tomatoes</span> before cooking?</p></div>
-      
-      <div class="dialogue-entry"><p><span class="robot">Robot</span>: Certainly! First, we should wash the <span class="red">tomatoes</span> thoroughly, then chop them into even pieces to ensure they cook evenly. After that, we can sauté them with the spices until they reach the desired consistency.</p></div>
-      
-      <div class="dialogue-entry"><p><span class="human">Human</span>: Great, that sounds easy enough! Let's get started with cooking the <span class="red">tomatoes</span>. Once they're cooked and ready, I'll need you to put a cooked <span class="red">tomato</span> into the refrigerator.</p></div>
-    </div>
 
-    <button onclick="applyVariation()">Change</button>
-
-
+    <!-- 文本变异展示2 -->
+    <div class="box-container" id="boxContainer"></div>
+    <button class="main-button" id="mainBtn" disabled>Change All</button>
     <script>
-      let stage = 0;
-      function applyVariation() {
-        const dialogue = document.getElementById("dialogue");
-        if (stage === 0) {
-          dialogue.innerHTML = `
-            <div class="dialogue-entry"><span class="human">Human</span>: Hey there, I've been thinking about what to do with the tomatoes we have. <span class="blue-strike">I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked tomatoes?</span></div>
-            <div class="dialogue-entry"><span class="robot">Robot</span>: Absolutely, Alice! Cooked tomatoes can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.</div>
-            <div class="dialogue-entry"><span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting tomato soup. <span class="red">I know Mug Star would love to help with that!</span> <span class="blue-strike">Do we have everything we need to cook the tomatoes, though?</span></div>
-            <div class="dialogue-entry"><span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking the tomatoes to perfection.</div>
-            <div class="dialogue-entry"><span class="human">Human</span>: <span class="blue-strike">Perfect! I want to make sure the tomatoes are well-seasoned when we cook them.</span> <span class="red">I bet Mug Star would add his own twist with some cheesy jokes while we cook.</span> Could you remind me how to properly prepare the tomatoes before cooking?</div>
-            <div class="dialogue-entry"><span class="robot">Robot</span>: Certainly! First, we should wash the tomatoes thoroughly, then chop them into even pieces to ensure they cook evenly. After that, we can sauté them with the spices until they reach the desired consistency.</div>
-            <div class="dialogue-entry"><span class="human">Human</span>: <span class="blue-strike">Great, that sounds easy enough!</span> Let's get started with cooking the tomatoes. Once they're cooked and ready, I'll need you to put a cooked tomato in the refrigerator. <span class="red">I can already imagine Mug Star popping in with a funny quip about how tomatoes are technically a fruit!</span></div>
-          `;
+      const stages = [
+        [
+          `<span class="human">Human</span>: Hey there, I've been thinking about what to do with <span class="orange">the tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with <span class="orange">them (tomatoes)</span>?`,
+          `<span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.`,
+          `<span class="human">Human</span>: That's exactly what I was thinking! I could use <span class="orange">them (tomatoes)</span> to create a savory sauce for pasta or maybe even a comforting soup. Do we have everything we need to cook <span class="orange">them (tomatoes)</span>, though?`,
+          `<span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.`,
+          `<span class="human">Human</span>: Perfect! I want to make sure they're well-seasoned when we cook <span class="orange">them (tomatoes)</span>. Could you remind me how to properly prepare <span class="orange">the fruit (tomatoes)</span> before cooking?`,
+          `<span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.`,
+          `<span class="human">Human</span>: Great, that sounds easy enough! Let's get started with cooking <span class="red">the fruit (tomatoes)</span>. Once they're cooked and ready, I'll need you to put <span class="red">them</span> in the refrigerator.`
+        ],
+        [
+          `<span class="human">Human</span>: Hey there, I've been thinking about what to do with the tomatoes we have. <span class="blue-strike">I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked tomatoes?</span>`,
+          `<span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.`,
+          `<span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting tomato soup. <span class="red">I know Mug Star would love to help with that!</span> <span class="blue-strike">Do we have everything we need to cook the tomatoes, though?</span>`,
+          `<span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.`,
+          `<span class="human">Human</span>: <span class="blue-strike">Perfect! I want to make sure the tomatoes are well-seasoned when we cook them.</span> <span class="red">I bet Mug Star would add his own twist with some cheesy jokes while we cook.</span> Could you remind me how to properly prepare the tomatoes before cooking?`,
+          `<span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.`,
+          `<span class="human">Human</span>: <span class="blue-strike">Great, that sounds easy enough!</span> Let's get started with cooking the tomatoes. Once they're cooked and ready, I'll need you to put a cooked tomato in the refrigerator. <span class="red">I can already imagine Mug Star popping in with a funny quip about how tomatoes are technically a fruit!</span>`
+        ],
+        [
+          `<span class="human">Human</span>: Hey there, I've been thinking about what to do with <span class="orange">the tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with <span class="orange">them (tomatoes)</span>?`,
+          `<span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.`,
+          `<span class="human">Human</span>: That's exactly what I was thinking! I could use <span class="orange">them (tomatoes)</span> to create a savory sauce for pasta or maybe even a comforting soup. Do we have everything we need to cook <span class="orange">them (tomatoes)</span>, though?`,
+          `<span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.`,
+          `<span class="human">Human</span>: Perfect! I want to make sure they're well-seasoned when we cook <span class="orange">them (tomatoes)</span>. Could you remind me how to properly prepare <span class="orange">the fruit (tomatoes)</span> before cooking?`,
+          `<span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.`,
+          `<span class="human">Human</span>: Great, that sounds easy enough! Let's get started with cooking <span class="red">the fruit (tomatoes)</span>. Once they're cooked and ready, I'll need you to put <span class="red">them</span> in the refrigerator.`
+        ]
+      ];
+
+      const container = document.getElementById("boxContainer");
+      const mainBtn = document.getElementById("mainBtn");
+      const dmp = new diff_match_patch();
+      const boxObjects = [];
+      let currentStage = 0;
+
+      function createBox(stageIndex, boxIndex) {
+        const box = document.createElement("div");
+        box.className = "text-box";
+        container.appendChild(box);
+
+        let currentText = stages[stageIndex][boxIndex];
+
+        function typeInitial(callback) {
+          let i = 0;
+          function step() {
+            if (i <= currentText.length) {
+              box.innerHTML = currentText.slice(0, i);
+              i++;
+              setTimeout(step, 30);
+            } else {
+              callback();
+            }
+          }
+          step();
         }
-        else if (stage === 1) {
-          dialogue.innerHTML = `
-            <div class="dialogue-entry"><span class="human">Human</span>: Hey there, I've been thinking about what to do with <span class="orange">the tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with <span class="orange">them (tomatoes)</span>?</div>
-            <div class="dialogue-entry"><span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.</div>
-            <div class="dialogue-entry"><span class="human">Human</span>: That's exactly what I was thinking! I could use <span class="orange">them (tomatoes)</span> to create a savory sauce for pasta or maybe even a comforting soup. Do we have everything we need to cook <span class="orange">them (tomatoes)</span>, though?</div>
-            <div class="dialogue-entry"><span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.</div>
-            <div class="dialogue-entry"><span class="human">Human</span>: Perfect! I want to make sure they're well-seasoned when we cook <span class="orange">them (tomatoes)</span>. Could you remind me how to properly prepare <span class="orange">the fruit (tomatoes)</span> before cooking?</div>
-            <div class="dialogue-entry"><span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.</div>
-            <div class="dialogue-entry"><span class="human">Human</span>: Great, that sounds easy enough! Let's get started with cooking <span class="red">the fruit (tomatoes)</span>. Once they're cooked and ready, I'll need you to put <span class="red">them</span> in the refrigerator.</div>
-          `;
+
+        function typeToNext(nextText, callback) {
+          const diffs = dmp.diff_main(currentText, nextText);
+          dmp.diff_cleanupSemantic(diffs);
+
+          let result = '';
+          let i = 0;
+          let charIndex = 0;
+
+          function step() {
+            if (i >= diffs.length) {
+              currentText = nextText;
+              callback();
+              return;
+            }
+            const [op, data] = diffs[i];
+            if (op === 0) {
+              result += data;
+              box.innerHTML = result;
+              i++;
+              step();
+            } else if (op === 1) {
+              if (charIndex < data.length) {
+                result += data[charIndex];
+                box.innerHTML = result;
+                charIndex++;
+                setTimeout(step, 30);
+              } else {
+                i++;
+                charIndex = 0;
+                step();
+              }
+            } else if (op === -1) {
+              i++;
+              step();
+            }
+          }
+          step();
         }
-        stage++;
+
+        return {
+          typeInitial,
+          typeToNext,
+          get currentText() {
+            return currentText;
+          }
+        };
       }
+
+      (async () => {
+        for (let i = 0; i < stages[0].length; i++) {
+          const boxObj = createBox(0, i);
+          boxObjects.push(boxObj);
+          await new Promise(resolve => boxObj.typeInitial(resolve));
+          await new Promise(r => setTimeout(r, 200)); // 每段之间等待一段时间
+        }
+        mainBtn.disabled = false;
+      })();
+
+      mainBtn.onclick = async () => {
+        mainBtn.disabled = true;
+        const nextStage = (currentStage + 1) % stages.length;
+        for (let i = 0; i < boxObjects.length; i++) {
+          const nextText = stages[nextStage][i];
+          await new Promise(resolve => {
+            boxObjects[i].typeToNext(nextText, resolve);
+          });
+          await new Promise(r => setTimeout(r, 400));
+        }
+        currentStage = nextStage;
+        mainBtn.disabled = false;
+      };
+
     </script>
 
-    <!-- 实验结果展示 -->
+<!-- 实验结果展示 -->
 <h2>Evaluations</h2>
 <h3 style="text-align: left;">Benchmark Result</h3>
-
+<p class="text-default">
+  Existing LLM-based task planners struggle to handle instructions in multi-turn dialogues, particularly when implicit referring expressions introduce ambiguity. In contrast, noise and partial context omission have less impact on their performance. These challenges are common in real-world human-robot interactions and need to be addressed.
+</p>
 <!-- 主展示区 -->
 <div class="image-display" style="
     display: flex;
@@ -483,7 +636,10 @@
 </script>
 
 <h3>Prompting Method</h3>
-<div class="image-display" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+<p class="text-default">
+  Among the three prompting methods compared, TOCC achieves the best performance by separating implicit RE resolution from task planning and providing clearer instructions. While AP improves performance by highlighting potential vagueness, it can sometimes cause confusion, and CoT offers moderate improvement through autonomous analysis of implicit REs.
+</p>
+<div class="image-display-prompting" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
     <div style="width: 700px; text-align: center;">
         <img id="imgPrompting" src="media/fig2_gemma.png" style="max-width: 100%; height: auto;">
         <p id="labelPrompting" style="text-align: center;">LLaMA3.1-8B + SayCan</p>
@@ -521,12 +677,22 @@
 </script>
 
 
-    <!-- 相关研究 -->
-    <h2>Related Works</h2>
+  <!-- 相关研究 -->
+  <h2>Related Works</h2>
 
-
-    <!-- BibTeX -->
-    <h2>BibTeX</h2>
+  <h2 style="color: #2c7edb; font-family: sans-serif;">BibTeX</h2>
+  <div style="background-color: #f7f7f7; padding: 1em; font-family: monospace; white-space: pre; text-align: left;">
+    @misc{jiang2025rei-bench,<br>
+    &nbsp;&nbsp;title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {{REI-Bench}: Can Embodied Agents Understand Vague Human Instructions in Task Planning?},<br>
+    &nbsp;&nbsp;author&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {Chenxi Jiang and Chuhao Zhou and Jianfei Yang},<br>
+    &nbsp;&nbsp;year&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {2025},<br>
+    &nbsp;&nbsp;eprint&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {2505.10872},<br>
+    &nbsp;&nbsp;archivePrefix= {arXiv},<br>
+    &nbsp;&nbsp;primaryClass&nbsp;= {cs.RO},<br>
+    &nbsp;&nbsp;url&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {https://arxiv.org/abs/2505.10872},<br>
+    &nbsp;&nbsp;note&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {arXiv preprint arXiv:2505.10872}<br>
+    }
+  </div>
 
   </div> <!-- 结束 .container -->
 </body>
