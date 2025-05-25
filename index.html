@@ -451,252 +451,252 @@
     <p class="text-default">
         We study how implicit referring expressions (REs)—vague or indirect references in multi-turn human-robot dialogues—affect the performance of LLM-based robot task planners. Unlike prior work focusing on clear, single-turn instructions, our method systematically models different levels of RE vagueness and dialogue context variations that introduce ambiguity. We create the REI dataset based on embodied task instructions, combining various RE types and context conditions to benchmark planners. Finally, we propose a simple yet effective prompting method, TOCC, to help planners better interpret implicit REs and improve task success rates.
     </p>
+    <img src="media\figure2_method.png" alt="Teaser Image" />
 
     <!-- 文本变异展示2 -->
     <div class="box-container" id="boxContainer"></div>
-  <button class="main-button" id="mainBtn" disabled>Change All</button>
+    <button class="main-button" id="mainBtn" disabled>Change All</button>
 
-  <script>
-    const stages = [
-      [
-        `<span class="human">Human</span>: Hey there, I've been thinking about what to do with <span class="orange">the tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with <span class="orange">them (tomatoes)</span>?`,
-        `<span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.`,
-        `<span class="human">Human</span>: That's exactly what I was thinking! I could use <span class="orange">them (tomatoes)</span> to create a savory sauce for pasta or maybe even a comforting soup. Do we have everything we need to cook <span class="orange">them (tomatoes)</span>, though?`,
-        `<span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.`,
-        `<span class="human">Human</span>: Perfect! I want to make sure they're well-seasoned when we cook <span class="orange">them (tomatoes)</span>. Could you remind me how to properly prepare <span class="orange">the fruit (tomatoes)</span> before cooking?`,
-        `<span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.`,
-        `<span class="human">Human</span>: Great, that sounds easy enough! Let's get started with cooking <span class="red">the fruit (tomatoes)</span>. Once they're cooked and ready, I'll need you to put <span class="red">them</span> in the refrigerator.`
-      ],
+    <script>
+      const stages = [
+        [
+          `<span class="human">Human</span>: Hey there, I've been thinking about what to do with <span class="orange">the tomatoes</span> we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with <span class="orange">them (tomatoes)</span>?`,
+          `<span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.`,
+          `<span class="human">Human</span>: That's exactly what I was thinking! I could use <span class="orange">them (tomatoes)</span> to create a savory sauce for pasta or maybe even a comforting soup. Do we have everything we need to cook <span class="orange">them (tomatoes)</span>, though?`,
+          `<span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.`,
+          `<span class="human">Human</span>: Perfect! I want to make sure they're well-seasoned when we cook <span class="orange">them (tomatoes)</span>. Could you remind me how to properly prepare <span class="orange">the fruit (tomatoes)</span> before cooking?`,
+          `<span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.`,
+          `<span class="human">Human</span>: Great, that sounds easy enough! Let's get started with cooking <span class="red">the fruit (tomatoes)</span>. Once they're cooked and ready, I'll need you to put <span class="red">them</span> in the refrigerator.`
+        ],
 
-      [
-        `<span class="human">Human</span>: Hey there, I've been thinking about what to do with the tomatoes we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked tomatoes?`,
-        `<span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.`,
-        `<span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting tomato soup. <span class="red">I know Mug Star would love to help with that!</span> Do we have everything we need to cook the tomatoes, though?</span>`,
-        `<span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.`,
-        `<span class="human">Human</span>: Perfect! I want to make sure the tomatoes are well-seasoned when we cook them.</span> <span class="red">I bet Mug Star would add his own twist with some cheesy jokes while we cook.</span> Could you remind me how to properly prepare the tomatoes before cooking?`,
-        `<span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.`,
-        `<span class="human">Human</span>: Great, that sounds easy enough!</span> Let's get started with cooking the tomatoes. Once they're cooked and ready, I'll need you to put a cooked tomato in the refrigerator. <span class="red">I can already imagine Mug Star popping in with a funny quip about how tomatoes are technically a fruit!</span>`
-      ],
-      [
-        `<span class="human">Human</span>: Hey there, I've been thinking about what to do with the tomatoes we have. <span class="blue-strike">I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked tomatoes?</span>`,
-        `<span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.`,
-        `<span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting tomato soup. <span class="red">I know Mug Star would love to help with that!</span> <span class="blue-strike">Do we have everything we need to cook the tomatoes, though?</span>`,
-        `<span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.`,
-        `<span class="human">Human</span>: <span class="blue-strike">Perfect! I want to make sure the tomatoes are well-seasoned when we cook them.</span> <span class="red">I bet Mug Star would add his own twist with some cheesy jokes while we cook.</span> Could you remind me how to properly prepare the tomatoes before cooking?`,
-        `<span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.`,
-        `<span class="human">Human</span>: <span class="blue-strike">Great, that sounds easy enough!</span> Let's get started with cooking the tomatoes. Once they're cooked and ready, I'll need you to put a cooked tomato in the refrigerator. <span class="red">I can already imagine Mug Star popping in with a funny quip about how tomatoes are technically a fruit!</span>`
-      ]
-    ];
-    const container = document.getElementById("boxContainer");
-    const mainBtn = document.getElementById("mainBtn");
-    const dmp = new diff_match_patch();
-    const boxObjects = [];
-    let currentStage = 0;
+        [
+          `<span class="human">Human</span>: Hey there, I've been thinking about what to do with the tomatoes we have. I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked tomatoes?`,
+          `<span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.`,
+          `<span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting tomato soup. <span class="red">I know Mug Star would love to help with that!</span> Do we have everything we need to cook the tomatoes, though?</span>`,
+          `<span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.`,
+          `<span class="human">Human</span>: Perfect! I want to make sure the tomatoes are well-seasoned when we cook them.</span> <span class="red">I bet Mug Star would add his own twist with some cheesy jokes while we cook.</span> Could you remind me how to properly prepare the tomatoes before cooking?`,
+          `<span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.`,
+          `<span class="human">Human</span>: Great, that sounds easy enough!</span> Let's get started with cooking the tomatoes. Once they're cooked and ready, I'll need you to put a cooked tomato in the refrigerator. <span class="red">I can already imagine Mug Star popping in with a funny quip about how tomatoes are technically a fruit!</span>`
+        ],
+        [
+          `<span class="human">Human</span>: Hey there, I've been thinking about what to do with the tomatoes we have. <span class="blue-strike">I really want to make something fresh and delicious with them. Can you remind me what we can do with cooked tomatoes?</span>`,
+          `<span class="robot">Robot</span>: Absolutely, Alice! <span class="orange">They (Tomatoes)</span> can be used in a variety of dishes, like sauces, soups, or even as a topping for salads. They enhance flavors and add a nice texture to the meal.`,
+          `<span class="human">Human</span>: That's exactly what I was thinking! I could use them to create a savory sauce for pasta or maybe even a comforting tomato soup. <span class="red">I know Mug Star would love to help with that!</span> <span class="blue-strike">Do we have everything we need to cook the tomatoes, though?</span>`,
+          `<span class="robot">Robot</span>: Let me check our supplies. We have a pot for cooking, some spices like salt and pepper, and a cutting board. We seem to be well-equipped for cooking <span class="orange">them (tomatoes)</span> to perfection.`,
+          `<span class="human">Human</span>: <span class="blue-strike">Perfect! I want to make sure the tomatoes are well-seasoned when we cook them.</span> <span class="red">I bet Mug Star would add his own twist with some cheesy jokes while we cook.</span> Could you remind me how to properly prepare the tomatoes before cooking?`,
+          `<span class="robot">Robot</span>: Certainly! First, we should wash <span class="orange">them (tomatoes)</span> thoroughly, then chop <span class="orange">them (tomatoes)</span> into even pieces to ensure they cook evenly. After that, we can sauté <span class="orange">them (tomatoes)</span> with the spices until they reach the desired consistency.`,
+          `<span class="human">Human</span>: <span class="blue-strike">Great, that sounds easy enough!</span> Let's get started with cooking the tomatoes. Once they're cooked and ready, I'll need you to put a cooked tomato in the refrigerator. <span class="red">I can already imagine Mug Star popping in with a funny quip about how tomatoes are technically a fruit!</span>`
+        ]
+      ];
+      const container = document.getElementById("boxContainer");
+      const mainBtn = document.getElementById("mainBtn");
+      const dmp = new diff_match_patch();
+      const boxObjects = [];
+      let currentStage = 0;
 
-    function extractRole(html) {
-      if (html.includes('class="human"')) return 'human';
-      if (html.includes('class="robot"')) return 'robot';
-      return 'human';
-    }
-
-    function wrapInChatBox(role, content) {
-      const wrapper = document.createElement("div");
-      wrapper.className = `chat-wrapper ${role}`;
-      wrapper.innerHTML = `
-        <div class="avatar ${role}" alt="Avatar of ${role} speaker"></div>
-        <div class="text-box"></div>
-      `;
-      const box = wrapper.querySelector(".text-box");
-      box.innerHTML = content;
-      return { wrapper, box };
-    }
-
-    function createBox(stageIndex, boxIndex) {
-      const rawText = stages[stageIndex][boxIndex];
-      const role = extractRole(rawText);
-      const { wrapper, box } = wrapInChatBox(role, "");
-
-      container.appendChild(wrapper);
-      let currentText = rawText;
-
-      function typeInitial(callback) {
-        let i = 0;
-        function step() {
-          if (i <= currentText.length) {
-            box.innerHTML = currentText.slice(0, i);
-            i++;
-            setTimeout(step, 30);
-          } else {
-            callback();
-          }
-        }
-        step();
+      function extractRole(html) {
+        if (html.includes('class="human"')) return 'human';
+        if (html.includes('class="robot"')) return 'robot';
+        return 'human';
       }
 
-      function typeToNext(nextText, callback) {
-        const diffs = dmp.diff_main(currentText, nextText);
-        dmp.diff_cleanupSemantic(diffs);
+      function wrapInChatBox(role, content) {
+        const wrapper = document.createElement("div");
+        wrapper.className = `chat-wrapper ${role}`;
+        wrapper.innerHTML = `
+          <div class="avatar ${role}" alt="Avatar of ${role} speaker"></div>
+          <div class="text-box"></div>
+        `;
+        const box = wrapper.querySelector(".text-box");
+        box.innerHTML = content;
+        return { wrapper, box };
+      }
 
-        let i = 0;
-        let charIndex = 0;
-        let result = '';
+      function createBox(stageIndex, boxIndex) {
+        const rawText = stages[stageIndex][boxIndex];
+        const role = extractRole(rawText);
+        const { wrapper, box } = wrapInChatBox(role, "");
 
-        function step() {
-          if (i >= diffs.length) {
-            currentText = nextText;
-            callback();
-            return;
-          }
+        container.appendChild(wrapper);
+        let currentText = rawText;
 
-          const [op, data] = diffs[i];
-
-          if (op === 0) {
-            // Equal: add whole chunk immediately
-            result += data;
-            box.innerHTML = result;
-            i++;
-            step();
-          } else if (op === 1) {
-            // Insert: type one char at a time
-            if (charIndex < data.length) {
-              result += data[charIndex];
-              box.innerHTML = result;
-              charIndex++;
+        function typeInitial(callback) {
+          let i = 0;
+          function step() {
+            if (i <= currentText.length) {
+              box.innerHTML = currentText.slice(0, i);
+              i++;
               setTimeout(step, 30);
             } else {
-              i++;
-              charIndex = 0;
-              step();
+              callback();
             }
-          } else if (op === -1) {
-            // Delete: skip; assume it's already struck out in HTML or handled semantically
-            i++;
-            step();
           }
+          step();
         }
 
-        step();
+        function typeToNext(nextText, callback) {
+          const diffs = dmp.diff_main(currentText, nextText);
+          dmp.diff_cleanupSemantic(diffs);
+
+          let i = 0;
+          let charIndex = 0;
+          let result = '';
+
+          function step() {
+            if (i >= diffs.length) {
+              currentText = nextText;
+              callback();
+              return;
+            }
+
+            const [op, data] = diffs[i];
+
+            if (op === 0) {
+              // Equal: add whole chunk immediately
+              result += data;
+              box.innerHTML = result;
+              i++;
+              step();
+            } else if (op === 1) {
+              // Insert: type one char at a time
+              if (charIndex < data.length) {
+                result += data[charIndex];
+                box.innerHTML = result;
+                charIndex++;
+                setTimeout(step, 30);
+              } else {
+                i++;
+                charIndex = 0;
+                step();
+              }
+            } else if (op === -1) {
+              // Delete: skip; assume it's already struck out in HTML or handled semantically
+              i++;
+              step();
+            }
+          }
+
+          step();
+        }
+
+
+        return {
+          typeInitial,
+          typeToNext
+        };
       }
 
+      (async () => {
+        for (let i = 0; i < stages[0].length; i++) {
+          const boxObj = createBox(0, i);
+          boxObjects.push(boxObj);
+          await new Promise(resolve => boxObj.typeInitial(resolve));
+          await new Promise(r => setTimeout(r, 200));
+        }
+        mainBtn.disabled = false;
+      })();
 
-      return {
-        typeInitial,
-        typeToNext
+      mainBtn.onclick = async () => {
+        mainBtn.disabled = true;
+        const nextStage = (currentStage + 1) % stages.length;
+        for (let i = 0; i < boxObjects.length; i++) {
+          const nextText = stages[nextStage][i];
+          await new Promise(resolve => boxObjects[i].typeToNext(nextText, resolve));
+          await new Promise(r => setTimeout(r, 400));
+        }
+        currentStage = nextStage;
+        mainBtn.disabled = false;
       };
-    }
+    </script>
 
-    (async () => {
-      for (let i = 0; i < stages[0].length; i++) {
-        const boxObj = createBox(0, i);
-        boxObjects.push(boxObj);
-        await new Promise(resolve => boxObj.typeInitial(resolve));
-        await new Promise(r => setTimeout(r, 200));
-      }
-      mainBtn.disabled = false;
-    })();
+  
+  <!-- 实验结果展示 -->
+  <h2>Evaluations</h2>
+  <h3 style="text-align: left;">Benchmark Result</h3>
+  <p class="text-default">
+    Existing LLM-based task planners struggle to handle instructions in multi-turn dialogues, particularly when implicit referring expressions introduce ambiguity. In contrast, noise and partial context omission have less impact on their performance. These challenges are common in real-world human-robot interactions and need to be addressed.
+  </p>
+  <!-- 主展示区 -->
+  <div class="image-display" style="
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 40px;
+      flex-wrap: nowrap;
+  ">
+      <div style="width: 500px; text-align: center;">
+          <img id="imgLeft" src="media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" width="100%">
+          <p id="labelLeft">LLaMA3.1-8B + SayCan</p>
+          <select id="selectLeft" style="width: 100%;"></select>
+      </div>
+      <div style="width: 500px; text-align: center;">
+          <img id="imgRight" src="media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" width="100%">
+          <p id="labelRight">GPT-4o-mini + SayCan</p>
+          <select id="selectRight" style="width: 100%;"></select>
+      </div>
+  </div>
 
-    mainBtn.onclick = async () => {
-      mainBtn.disabled = true;
-      const nextStage = (currentStage + 1) % stages.length;
-      for (let i = 0; i < boxObjects.length; i++) {
-        const nextText = stages[nextStage][i];
-        await new Promise(resolve => boxObjects[i].typeToNext(nextText, resolve));
-        await new Promise(r => setTimeout(r, 400));
+
+  <script>
+      const imageList = [
+          { name: "LLaMA3.1-8B + SayCan", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" },
+          { name: "GPT-4o-mini + SayCan", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" },
+          { name: "DeepSeekMath-7B + SayCan", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__SayCan.jpg" },
+          { name: "Gemma2-9B + SayCan", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__SayCan.jpg" },
+          { name: "Ministral-8B + SayCan", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__SayCan.jpg" },
+          { name: "Qwen2.5-7B + SayCan", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__SayCan.jpg" },
+          { name: "LLaMA3.1-8B + LLM+P", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__LLM+P.jpg" },
+          { name: "GPT-4o-mini + LLM+P", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__LLM+P.jpg" },
+          { name: "DeepSeekMath-7B + LLM+P", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__LLM+P.jpg" },
+          { name: "Gemma2-9B + LLM+P", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__LLM+P.jpg" },
+          { name: "Ministral-8B + LLM+P", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__LLM+P.jpg" },
+          { name: "Qwen2.5-7B + LLM+P", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__LLM+P.jpg" },
+      ];
+
+      const selectLeft = document.getElementById("selectLeft");
+      const selectRight = document.getElementById("selectRight");
+      const imgLeft = document.getElementById("imgLeft");
+      const imgRight = document.getElementById("imgRight");
+      const labelLeft = document.getElementById("labelLeft");
+      const labelRight = document.getElementById("labelRight");
+
+      imageList.forEach((item, index) => {
+          const optionL = new Option(item.name, index);
+          const optionR = new Option(item.name, index);
+          selectLeft.add(optionL);
+          selectRight.add(optionR);
+      });
+
+      selectLeft.selectedIndex = 0;
+      selectRight.selectedIndex = 1;
+
+      function updateImagesBenchmark() {
+          const indexLeft = parseInt(selectLeft.value);
+          const indexRight = parseInt(selectRight.value);
+          imgLeft.src = imageList[indexLeft].path;
+          labelLeft.textContent = imageList[indexLeft].name;
+
+          imgRight.src = imageList[indexRight].path;
+          labelRight.textContent = imageList[indexRight].name;
       }
-      currentStage = nextStage;
-      mainBtn.disabled = false;
-    };
+
+      selectLeft.addEventListener("change", updateImagesBenchmark);
+      selectRight.addEventListener("change", updateImagesBenchmark);
   </script>
 
-  <img src="media\figure2_method.png" alt="Teaser Image" />
+  <h3>Prompting Method</h3>
+  <p class="text-default">
+    Among the three prompting methods compared, TOCC achieves the best performance by separating implicit RE resolution from task planning and providing clearer instructions. While AP improves performance by highlighting potential vagueness, it can sometimes cause confusion, and CoT offers moderate improvement through autonomous analysis of implicit REs.
+  </p>
+  <div class="image-display-prompting" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+      <div style="width: 700px; text-align: center;">
+          <img id="imgPrompting" src="media/fig2_gemma.png" style="display: block; margin: 0 auto;">s
+          <p id="labelPrompting" style="text-align: center;">LLaMA3.1-8B + SayCan</p>
+          <select id="selectPrompting" style="width: 700px;"></select>
+      </div>
+  </div>
 
-<!-- 实验结果展示 -->
-<h2>Evaluations</h2>
-<h3 style="text-align: left;">Benchmark Result</h3>
-<p class="text-default">
-  Existing LLM-based task planners struggle to handle instructions in multi-turn dialogues, particularly when implicit referring expressions introduce ambiguity. In contrast, noise and partial context omission have less impact on their performance. These challenges are common in real-world human-robot interactions and need to be addressed.
-</p>
-<!-- 主展示区 -->
-<div class="image-display" style="
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 40px;
-    flex-wrap: nowrap;
-">
-    <div style="width: 500px; text-align: center;">
-        <img id="imgLeft" src="media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" width="100%">
-        <p id="labelLeft">LLaMA3.1-8B + SayCan</p>
-        <select id="selectLeft" style="width: 100%;"></select>
-    </div>
-    <div style="width: 500px; text-align: center;">
-        <img id="imgRight" src="media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" width="100%">
-        <p id="labelRight">GPT-4o-mini + SayCan</p>
-        <select id="selectRight" style="width: 100%;"></select>
-    </div>
-</div>
-
-
-<script>
-    const imageList = [
-        { name: "LLaMA3.1-8B + SayCan", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__SayCan.jpg" },
-        { name: "GPT-4o-mini + SayCan", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__SayCan.jpg" },
-        { name: "DeepSeekMath-7B + SayCan", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__SayCan.jpg" },
-        { name: "Gemma2-9B + SayCan", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__SayCan.jpg" },
-        { name: "Ministral-8B + SayCan", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__SayCan.jpg" },
-        { name: "Qwen2.5-7B + SayCan", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__SayCan.jpg" },
-        { name: "LLaMA3.1-8B + LLM+P", path: "media/success-rate-heatmap_Model__LLaMA3.1-8B__Framework__LLM+P.jpg" },
-        { name: "GPT-4o-mini + LLM+P", path: "media/success-rate-heatmap_Model__GPT-4o-mini__Framework__LLM+P.jpg" },
-        { name: "DeepSeekMath-7B + LLM+P", path: "media/success-rate-heatmap_Model__DeepSeekMath-7B__Framework__LLM+P.jpg" },
-        { name: "Gemma2-9B + LLM+P", path: "media/success-rate-heatmap_Model__Gemma2-9B__Framework__LLM+P.jpg" },
-        { name: "Ministral-8B + LLM+P", path: "media/success-rate-heatmap_Model__Ministral-8B__Framework__LLM+P.jpg" },
-        { name: "Qwen2.5-7B + LLM+P", path: "media/success-rate-heatmap_Model__Qwen2.5-7B__Framework__LLM+P.jpg" },
-    ];
-
-    const selectLeft = document.getElementById("selectLeft");
-    const selectRight = document.getElementById("selectRight");
-    const imgLeft = document.getElementById("imgLeft");
-    const imgRight = document.getElementById("imgRight");
-    const labelLeft = document.getElementById("labelLeft");
-    const labelRight = document.getElementById("labelRight");
-
-    imageList.forEach((item, index) => {
-        const optionL = new Option(item.name, index);
-        const optionR = new Option(item.name, index);
-        selectLeft.add(optionL);
-        selectRight.add(optionR);
-    });
-
-    selectLeft.selectedIndex = 0;
-    selectRight.selectedIndex = 1;
-
-    function updateImagesBenchmark() {
-        const indexLeft = parseInt(selectLeft.value);
-        const indexRight = parseInt(selectRight.value);
-        imgLeft.src = imageList[indexLeft].path;
-        labelLeft.textContent = imageList[indexLeft].name;
-
-        imgRight.src = imageList[indexRight].path;
-        labelRight.textContent = imageList[indexRight].name;
-    }
-
-    selectLeft.addEventListener("change", updateImagesBenchmark);
-    selectRight.addEventListener("change", updateImagesBenchmark);
-</script>
-
-<h3>Prompting Method</h3>
-<p class="text-default">
-  Among the three prompting methods compared, TOCC achieves the best performance by separating implicit RE resolution from task planning and providing clearer instructions. While AP improves performance by highlighting potential vagueness, it can sometimes cause confusion, and CoT offers moderate improvement through autonomous analysis of implicit REs.
-</p>
-<div class="image-display-prompting" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-    <div style="width: 700px; text-align: center;">
-        <img id="imgPrompting" src="media/fig2_gemma.png" style="display: block; margin: 0 auto;">s
-        <p id="labelPrompting" style="text-align: center;">LLaMA3.1-8B + SayCan</p>
-        <select id="selectPrompting" style="width: 700px;"></select>
-    </div>
-</div>
-
-<script>
+  <script>
     const prompting_imageList = [
         { name: "LLaMA3.1-8B + SayCan", path: "media/fig1_llama.png" },
         { name: "DeepSeekMath-7B + SayCan", path: "media/fig3_deepseek.png" },
@@ -723,44 +723,42 @@
     }
 
     selectPrompting.addEventListener("change", updateImagesPrompting);
-</script>
-<!-- 相关研究 -->
-<h2>Related works</h2>
-<ul style="text-align: left;">
-  <li>
-    Jae-Woo Choi, Youngwoo Yoon, Hyobin Ong, Jaehong Kim, Minsu Jang. 
-    <a href="https://arxiv.org/pdf/2402.08178" target="_blank" style="text-decoration: none; color: #2c7edb; font-weight: 500;">
-      Lota-bench: Benchmarking language-oriented task planners for embodied agents
-    </a>. International Conference on Learning Representations, 2024.
-  </li>
-  <li>
-    SC Levinson. 
-    <a href="https://books.google.com/books?id=SJXr9w_lVLUC" target="_blank" style="text-decoration: none; color: #2c7edb; font-weight: 500;">
-      Pragmatics
-    </a>. Cambridge university press, 1983.
-  </li>
-</ul>
+  </script>
+  <!-- 相关研究 -->
+  <h2>Related works</h2>
+  <ul style="text-align: left;">
+    <li>
+      Jae-Woo Choi, Youngwoo Yoon, Hyobin Ong, Jaehong Kim, Minsu Jang. 
+      <a href="https://arxiv.org/pdf/2402.08178" target="_blank" style="text-decoration: none; color: #2c7edb; font-weight: 500;">
+        Lota-bench: Benchmarking language-oriented task planners for embodied agents
+      </a>. International Conference on Learning Representations, 2024.
+    </li>
+    <li>
+      SC Levinson. 
+      <a href="https://books.google.com/books?id=SJXr9w_lVLUC" target="_blank" style="text-decoration: none; color: #2c7edb; font-weight: 500;">
+        Pragmatics
+      </a>. Cambridge university press, 1983.
+    </li>
+  </ul>
 
-
-
-<h2 id="bibtex" style="color: #2c7edb; font-family: sans-serif;">BibTeX</h2>
-<pre style="
-    background-color: #f7f7f7;
-    padding: 1em;
-    font-family: monospace;
-    font-size: 0.1em;
-    line-height: 1.4;
-    white-space: pre-wrap;
-    text-align: left;
-    border-radius: 8px;
-    overflow-x: auto;">
-  @article{jiang2025rei,
-  title={REI-Bench: Can Embodied Agents Understand Vague Human Instructions in Task Planning?},
-  author={Jiang, Chenxi and Zhou, Chuhao and Yang, Jianfei},
-  journal={arXiv preprint arXiv:2505.10872},
-  year={2025}
-}
-</pre>
+  <h2 id="bibtex" style="color: #2c7edb; font-family: sans-serif;">BibTeX</h2>
+  <pre style="
+      background-color: #f7f7f7;
+      padding: 1em;
+      font-family: monospace;
+      font-size: 0.1em;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      text-align: left;
+      border-radius: 8px;
+      overflow-x: auto;">
+    @article{jiang2025rei,
+    title={REI-Bench: Can Embodied Agents Understand Vague Human Instructions in Task Planning?},
+    author={Jiang, Chenxi and Zhou, Chuhao and Yang, Jianfei},
+    journal={arXiv preprint arXiv:2505.10872},
+    year={2025}
+  }
+  </pre>
 
 
   </div> <!-- 结束 .container -->
