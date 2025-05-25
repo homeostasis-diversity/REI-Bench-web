@@ -454,7 +454,7 @@
     </p>
     <img src="media\figure2_method.png" alt="Teaser Image" />
 
-    <h3 style="text-align: left;">Human-Robot Interac: from Clarity to vagueness</h3>
+    <h3 style="text-align: left;">Human-Robot interaction: from Clarity to Vagueness</h3>
     <!-- 文本变异展示2 -->
     <div class="box-container" id="boxContainer"></div>
     <button class="main-button" id="mainBtn" disabled>Change All</button>
@@ -588,22 +588,12 @@
         };
       }
 
-      // (async () => {
-      //   for (let i = 0; i < stages[0].length; i++) {
-      //     const boxObj = createBox(0, i);
-      //     boxObjects.push(boxObj);
-      //     await new Promise(resolve => boxObj.typeInitial(resolve));
-      //     await new Promise(r => setTimeout(r, 200));
-      //   }
-      //   mainBtn.disabled = false;
-      // })();
-
-      (() => {
+      (async () => {
         for (let i = 0; i < stages[0].length; i++) {
           const boxObj = createBox(0, i);
           boxObjects.push(boxObj);
-          // 直接展示完整内容，而不是 typeInitial 动画
-          boxObj.showFull();  // 假设你有 showFull() 或 setText() 方法
+          await new Promise(resolve => boxObj.typeInitial(resolve));
+          await new Promise(r => setTimeout(r, 200));
         }
         mainBtn.disabled = false;
       })();
@@ -626,7 +616,10 @@
   <h2>Evaluations</h2>
   <h3 style="text-align: left;">Benchmark Result</h3>
   <p class="text-default">
-    Existing LLM-based task planners struggle to handle instructions in multi-turn dialogues, particularly when implicit referring expressions introduce ambiguity. In contrast, noise and partial context omission have less impact on their performance. These challenges are common in real-world human-robot interactions and need to be addressed.
+    Existing LLM-based task planners struggle to handle instructions in multi-turn dialogues, 
+    particularly when implicit referring expressions introduce vagueness. 
+    In contrast, noise and partial context omission have less impact on their performance. 
+    These challenges are common in real-world human-robot interactions and need to be addressed.
   </p>
   <!-- 主展示区 -->
   <div class="image-display" style="
