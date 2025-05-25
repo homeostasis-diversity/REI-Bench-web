@@ -788,12 +788,18 @@
   <!-- <img src="media\figure_case.png" alt="Teaser Image" /> -->
 
   <h3>Prompting Method</h3>
+  <p class="text-default">
+    We evaluate two novel NLP methods: the aware prompt (AP), which explicitly adds one guidance prompt to indicate possible REs, 
+    and Chain-of-Thought (CoT), which guides the planner to resolve REs step by step before planning. 
+    However, AP tells the planner to resolve REs even when none exist, so it fabricates references and hallucinates, 
+    while CoT significantly increases response time to planners.
+    To this end, we propose a simple yet effective method, task-oriented context cognition (TOCC), 
+    which prompts the planner to resolve the implicit REs in the instruction and rephrase it to a more concise and straightforward one. 
+  </p>
   <img src="media\figure-promptingMethod.png" alt="Teaser Image" />
   <p class="text-default">
     Among the three prompting methods compared, TOCC achieves the best performance by separating implicit RE resolution 
     from task planning and providing clearer instructions. 
-    While AP improves performance by highlighting potential vagueness, 
-    it can sometimes cause confusion, and CoT offers moderate improvement through autonomous analysis of implicit REs.
   </p>
   <div class="image-display-prompting" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
       <div style="width: 700px; text-align: center;">
